@@ -1,4 +1,4 @@
-# ⚡ CryptoPulse Reactive — Ứng Dụng Đa Nền Tảng Theo Dõi Thị Trường Thời Gian Thực
+# CryptoPulse Reactive — Ứng Dụng Đa Nền Tảng Theo Dõi Thị Trường Thời Gian Thực
 
 > **Môn học:** Lập Trình Đa Nền Tảng  
 > **Chủ đề 02:** Lập trình Bất đồng bộ với Future & Stream: Xây dựng Module Reactive thời gian thực  
@@ -6,13 +6,13 @@
 > **Ngôn ngữ:** Dart 3.x & Flutter Framework  
 > **Quy mô:** Nhóm 02 sinh viên  
 > 
-> 👥 **THÀNH VIÊN THỰC HIỆN:**
+> **THÀNH VIÊN THỰC HIỆN:**
 > 1. **Trần Văn Hợp** (Trưởng nhóm - Business Logic, State Management, Event Loop Engine, Unit Testing)
 > 2. **Mai Tuấn An** (Thành viên - UI/UX Design, Data Visualization, Multiplatform Native, Báo cáo & Video)
 
 ---
 
-## 📋 MỤC LỤC
+## MỤC LỤC
 1. [Giới Thiệu Dự Án](#gioi-thieu-du-an)
 2. [Tính Năng Nổi Bật Đáp Ứng Chuẩn Đề Tài](#tinh-nang-noi-bat)
 3. [Kiến Trúc Kỹ Thuật (Event Loop, Stream, Transformers)](#kien-truc-ky-thuat)
@@ -25,7 +25,7 @@
 ---
 
 <a id="gioi-thieu-du-an"></a>
-## 🌟 GIỚI THIỆU DỰ ÁN
+## GIỚI THIỆU DỰ ÁN
 
 **CryptoPulse Reactive** là ứng dụng di động đa nền tảng được xây dựng nhằm giải quyết bài toán xử lý và hiển thị luồng dữ liệu biến động cực nhanh trong thời gian thực (real-time high-frequency streaming) mà không làm lag giao diện người dùng, đồng thời quản lý bộ nhớ an toàn tuyệt đối.
 
@@ -38,7 +38,7 @@
 ---
 
 <a id="tinh-nang-noi-bat"></a>
-## 🚀 TÍNH NĂNG NỔI BẬT ĐÁP ỨNG CHUẨN ĐỀ TÀI
+## TÍNH NĂNG NỔI BẬT ĐÁP ỨNG CHUẨN ĐỀ TÀI
 
 | Nhóm Tính Năng | Mô Tả Kỹ Thuật | Ứng Dụng Thực Tế Trong App |
 | :--- | :--- | :--- |
@@ -52,7 +52,7 @@
 ---
 
 <a id="kien-truc-ky-thuat"></a>
-## 🧠 KIẾN TRÚC KỸ THUẬT
+## KIẾN TRÚC KỸ THUẬT
 
 ### 1. Mô Hình Dart Event Loop & Hai Hàng Đợi (Queues)
 
@@ -118,7 +118,7 @@ void dispose() {
 ---
 
 <a id="cau-hinh-bien-moi-truong"></a>
-## ⚙️ CẤU HÌNH BIẾN MÔI TRƯỜNG (.env) & GOOGLE SERVICES
+## CẤU HÌNH BIẾN MÔI TRƯỜNG (.env) & GOOGLE SERVICES
 
 ### 1. Biến môi trường (`.env`)
 Dự án đã chuẩn bị sẵn file mẫu [`.env.example`](file:///.env.example). Để thiết lập, sao chép file thành `.env`:
@@ -144,7 +144,7 @@ APP_ENVIRONMENT=development
 ---
 
 <a id="huong-dan-cai-dat"></a>
-## 📱 HƯỚNG DẪN CÀI ĐẶT & CHẠY ỨNG DỤNG
+## HƯỚNG DẪN CÀI ĐẶT & CHẠY ỨNG DỤNG
 
 Dự án tương thích hoàn toàn với Flutter 3.10+ và Dart 3.0+.
 
@@ -161,7 +161,7 @@ flutter devices
 
 ### Bước 3: Biên dịch & Chạy trên các hệ điều hành
 
-#### 📱 1. Chạy trên Android (Real Device & Emulator)
+#### 1. Chạy trên Android (Real Device & Emulator)
 * **Máy ảo (Emulator):** Mở Android Studio -> Virtual Device Manager -> Khởi động máy ảo Pixel/Galaxy.
 * **Thiết bị thật (Real Device):**
   1. Cắm cáp USB vào máy tính.
@@ -172,7 +172,7 @@ flutter devices
 flutter run -d android
 ```
 
-#### 🍏 2. Chạy trên iOS (iPhone Simulator & Real iPhone)
+#### 2. Chạy trên iOS (iPhone Simulator & Real iPhone)
 * **Máy ảo (iOS Simulator):** Mở ứng dụng Simulator trên macOS.
 * **iPhone thật:** Kết nối cáp Lightning/Type-C, tin cậy máy tính và bật Developer Mode trên iOS.
 * Chạy lệnh:
@@ -180,13 +180,13 @@ flutter run -d android
 flutter run -d ios
 ```
 
-#### 🌐 3. Chạy trên Web (Google Chrome)
+#### 3. Chạy trên Web (Google Chrome)
 Để kiểm tra giao diện nhanh chóng trên máy tính:
 ```bash
 flutter run -d chrome
 ```
 
-#### 💻 4. Chạy trên Windows Desktop
+#### 4. Chạy trên Windows Desktop
 ```bash
 flutter run -d windows
 ```
@@ -194,9 +194,7 @@ flutter run -d windows
 ---
 
 <a id="phan-chia-cong-viec"></a>
-## 👥 BẢNG PHÂN CHIA CÔNG VIỆC (WORK BREAKDOWN STRUCTURE - WBS) & KỊCH BẢN COMMIT GIT
-
-Theo đúng quy định đề bài: **Quy mô mỗi nhóm 02 sinh viên**, nhóm đã lập bảng phân chia công việc chi tiết (WBS) phân định rõ vai trò và danh sách các file mã nguồn do từng thành viên trực tiếp thực hiện:
+##  BẢNG PHÂN CHIA CÔNG VIỆC (WORK BREAKDOWN STRUCTURE - WBS) & KỊCH BẢN COMMIT GIT
 
 ### 1. Bảng Phân Công Công Việc Chi Tiết (WBS)
 
@@ -244,34 +242,8 @@ git push -u origin main
 ```
 
 ---
-
-<a id="kich-ban-video"></a>
-## 🎬 KỊCH BẢN QUAY VIDEO CLIP THAO TÁC THỰC TẾ
-
-Khi quay video nộp bài (thời lượng khuyến nghị 4 - 6 phút), nhóm nên thực hiện theo đúng các phân cảnh sau:
-
-* **0:00 - 0:45 | Giới thiệu:**
-  * Giới thiệu tên đề tài: *Chủ đề 02: Lập trình Bất đồng bộ với Future & Stream*.
-  * Chiếu cấu trúc thư mục dự án và khởi động ứng dụng trên thiết bị thật (Android hoặc iOS) hoặc máy ảo.
-* **0:45 - 2:00 | Demo Bảng Giá Thời Gian Thực & Toán Tử Debounce:**
-  * Thao tác trên màn hình Thị trường: Cho thấy giá BTC, ETH, SOL tự động cập nhật liên tục kèm hiệu ứng nhấp nháy xanh/đỏ.
-  * Thử nghiệm thanh tìm kiếm: Gõ nhanh các chữ cái `s-o-l-a-n-a`. Chỉ ra rằng danh sách KHÔNG lọc sau mỗi phím gõ mà đợi 400ms sau khi ngừng tay mới lọc (Toán tử Debounce hoạt động hiệu quả).
-* **2:00 - 3:15 | Demo Màn Hình Chi Tiết & Hủy Luồng An Toàn (Dispose):**
-  * Nhấn vào một đồng coin (ví dụ Bitcoin) để vào màn hình chi tiết.
-  * Chỉ rõ bộ đếm `Subscribers: 2` và `Số tick đã nhận: ...` đang tăng lên.
-  * Nhấn nút Back để thoát ra màn hình chính: Chỉ rõ bộ đếm giảm về `Subscribers: 1` và log console in ra: `[SAFE DISPOSE] Đã hủy toàn bộ StreamSubscription thành công!`.
-  * Bật toggle "Giả lập rò rỉ bộ nhớ" rồi vào lại và thoát ra để giải thích sự khác biệt khi không hủy subscription.
-* **3:15 - 4:15 | Demo Phòng Thí Nghiệm Event Loop & Microtask Queue:**
-  * Chuyển sang Tab "Event Loop".
-  * Nhấn nút "Chạy Thử" để ứng dụng in ra thứ tự thực thi theo thời gian thực (Microsecond).
-  * Thuyết minh tại sao `Microtask Queue` chạy trước `Event Queue (Future)` dù được gọi sau trong code.
-* **4:15 - 5:00 | Tổng Kết & Kết Thúc:**
-  * Khái quát lại giá trị kiến trúc Reactive và giải đáp cách ứng dụng chạy mượt mà trên cả iOS lẫn Android.
-
----
-
 <a id="kiem-thu-tu-dong"></a>
-## 🧪 KIỂM THỬ TỰ ĐỘNG (UNIT TESTING)
+##  KIỂM THỬ TỰ ĐỘNG (UNIT TESTING)
 
 Dự án đi kèm các bộ kiểm thử tự động xác thực toàn diện:
 1. `test/stream_transformers_test.dart`: Kiểm tra toán tử Debounce và Throttle.
@@ -286,7 +258,7 @@ dart run test/verify_pure_dart.dart
 Kết quả hiển thị trên console:
 ```text
 =============================================
-🚀 CHẠY KIỂM THỬ TỰ ĐỘNG CHỦ ĐỀ 02 (DART TEST)
+ CHẠY KIỂM THỬ TỰ ĐỘNG CHỦ ĐỀ 02 (DART TEST)
 =============================================
 [Test 1] Kiểm tra thứ tự Event Loop & Microtask Queue:
   -> PASS: Thứ tự ưu tiên chính xác tuyệt đối: Sync -> Microtasks -> Future.
@@ -299,5 +271,5 @@ Kết quả hiển thị trên console:
   -> Đã nhận: Sub1=1 ticks, Sub2=1 ticks.
   -> PASS: Đã hủy sub1 & sub2 an toàn. Subscribers giảm từ 1 về 0.
 
-🎉 TOÀN BỘ CÁC BÀI TEST CHỦ ĐỀ 02 ĐÃ VƯỢT QUA 100%!
+TOÀN BỘ CÁC BÀI TEST CHỦ ĐỀ 02 ĐÃ VƯỢT QUA 100%!
 ```
