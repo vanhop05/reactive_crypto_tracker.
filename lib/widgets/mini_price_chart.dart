@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 
-/// CustomPainter rendering a sleek sparkline chart for real-time crypto price history.
+/// Vẽ biểu đồ đường tối giản cho dữ liệu lịch sử giá tiền điện tử theo thời gian thực.
 class MiniPriceChart extends StatelessWidget {
   final List<double> dataPoints;
   final bool isPositive;
@@ -35,6 +35,7 @@ class MiniPriceChart extends StatelessWidget {
   }
 }
 
+// Vẽ biểu đồ đường tối giản dựa trên danh sách điểm dữ liệu và màu sắc đường
 class _SparklinePainter extends CustomPainter {
   final List<double> points;
   final Color lineColor;
@@ -75,7 +76,7 @@ class _SparklinePainter extends CustomPainter {
     fillPath.lineTo(size.width, size.height);
     fillPath.close();
 
-    // Gradient fill under curve
+    // Thêm gradient cho đường biểu đồ
     final gradient = LinearGradient(
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
@@ -84,13 +85,13 @@ class _SparklinePainter extends CustomPainter {
         lineColor.withOpacity(0.0),
       ],
     );
-
+    // Vẽ phần dưới đường biểu đồ
     final fillPaint = Paint()
       ..shader = gradient.createShader(Rect.fromLTWH(0, 0, size.width, size.height))
       ..style = PaintingStyle.fill;
 
     canvas.drawPath(fillPath, fillPaint);
-
+    // Vễ đường biểu đồ
     final linePaint = Paint()
       ..color = lineColor
       ..style = PaintingStyle.stroke

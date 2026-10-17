@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// App-wide theme and color palette tailored for real-time financial metrics.
+/// Chủ đề và bảng màu trên toàn ứng dụng được thiết kế riêng cho các chỉ số tài chính theo thời gian thực.
 class AppTheme {
   // Brand colors
   static const Color primaryGreen = Color(0xFF10B981); // Gain
@@ -9,20 +9,21 @@ class AppTheme {
   static const Color accentPurple = Color(0xFF8B5CF6);
   static const Color warningOrange = Color(0xFFF59E0B);
 
-  // Dark Theme Colors
+  // Màu nền chế độ tối
   static const Color darkBg = Color(0xFF0B0E14);
   static const Color darkCard = Color(0xFF151B26);
   static const Color darkCardBorder = Color(0xFF222C3D);
   static const Color darkTextPrimary = Color(0xFFF3F4F6);
   static const Color darkTextSecondary = Color(0xFF9CA3AF);
 
-  // Light Theme Colors
+  // Màu nền chế độ sáng
   static const Color lightBg = Color(0xFFF8FAFC);
   static const Color lightCard = Color(0xFFFFFFFF);
   static const Color lightCardBorder = Color(0xFFE2E8F0);
   static const Color lightTextPrimary = Color(0xFF0F172A);
   static const Color lightTextSecondary = Color(0xFF64748B);
 
+// Chế độ tối
   static ThemeData get darkTheme {
     return ThemeData(
       useMaterial3: true,
@@ -90,6 +91,7 @@ class AppTheme {
     );
   }
 
+//Chế độ sáng
   static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,

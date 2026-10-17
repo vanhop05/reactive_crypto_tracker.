@@ -1,4 +1,4 @@
-/// Model representing a cryptocurrency asset with live market metrics.
+/// Mô hình dữ liệu crypto
 class CryptoAsset {
   final String id;
   final String symbol;
@@ -27,12 +27,12 @@ class CryptoAsset {
   });
 
   bool get isPositive => change24h >= 0;
-
+  //Cập nhật giá mới
   void applyTick(double newPrice) {
     if (newPrice > high24h) high24h = newPrice;
     if (newPrice < low24h) low24h = newPrice;
     
-    // Update sparkline (maintain last 20 points)
+    // Giũ lại 25 giá gần gần nhất làm sparkline
     sparkline.add(newPrice);
     if (sparkline.length > 25) {
       sparkline.removeAt(0);
@@ -43,7 +43,7 @@ class CryptoAsset {
     currentPrice = newPrice;
     lastUpdated = DateTime.now();
   }
-
+  // Tao bản sao 
   CryptoAsset copyWith({
     String? id,
     String? symbol,

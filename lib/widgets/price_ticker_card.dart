@@ -4,7 +4,7 @@ import '../models/crypto_asset.dart';
 import '../models/market_tick.dart';
 import 'mini_price_chart.dart';
 
-/// Card displaying real-time cryptocurrency info with pulse animation on tick change.
+/// Thẻ hiển thị thông tin cryptocurrency theo thời gian thực, kèm hiệu ứng pulse mỗi khi dữ liệu thay đổi.
 class PriceTickerCard extends StatefulWidget {
   final CryptoAsset asset;
   final MarketTick? latestTick;
@@ -27,6 +27,7 @@ class _PriceTickerCardState extends State<PriceTickerCard>
   late Animation<Color?> _flashColorAnimation;
   double _lastSeenPrice = 0.0;
 
+// Trạng thái trước khi cập nhật 
   @override
   void initState() {
     super.initState();
@@ -42,7 +43,7 @@ class _PriceTickerCardState extends State<PriceTickerCard>
       end: Colors.transparent,
     ).animate(_flashController);
   }
-
+  // Hiệu ứng khi giá thay đổi
   @override
   void didUpdateWidget(covariant PriceTickerCard oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -67,13 +68,13 @@ class _PriceTickerCardState extends State<PriceTickerCard>
       _flashController.forward(from: 0.0);
     }
   }
-
+  // Giải phóng bộ nhớ
   @override
   void dispose() {
     _flashController.dispose();
     super.dispose();
   }
-
+  // Giao diện thẻ thông tin crypto
   @override
   Widget build(BuildContext context) {
     final currencyFormatter = NumberFormat.currency(

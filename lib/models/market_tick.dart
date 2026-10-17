@@ -1,4 +1,4 @@
-/// Model representing a single real-time market price tick.
+/// Mô hình một biến động giá đơn lẻ trên thị trường theo thời gian thực
 class MarketTick {
   final String symbol;
   final double price;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Represents a single recorded execution step in the Event Loop demonstration.
+/// Một bước thực thi đơn lẻ được ghi lại trong phần minh họa của EventLoop 
 class EventLoopStep {
   final int id;
   final String queueType; // 'Synchronous Stack', 'Microtask Queue', 'Event Queue (Future/Timer)'

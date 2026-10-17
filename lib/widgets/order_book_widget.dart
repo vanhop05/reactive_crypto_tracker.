@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../models/order_book_entry.dart';
 
-/// Renders a real-time responsive Order Book depth chart (Bids vs Asks).
+/// Hiển thị biểu đồ lệnh mua so với lệnh bán theo thời gian thực 
 class OrderBookWidget extends StatelessWidget {
   final List<OrderBookEntry> entries;
 

@@ -1,9 +1,9 @@
-/// Model representing an order book depth entry (Bid/Ask)
+///Mô hình một mục nhập độ sâu sổ lệnh (Mua/Bán)
 class OrderBookEntry {
   final double price;
   final double amount;
   final double total;
-  final bool isBid; // true for buy (bid), false for sell (ask)
+  final bool isBid; // buy = true (bid), sell = false (ask)
 
   const OrderBookEntry({
     required this.price,

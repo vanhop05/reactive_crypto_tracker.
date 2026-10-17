@@ -1,7 +1,7 @@
 import 'dart:async';
 
-/// Custom Stream Transformer implementing the Debounce pattern.
-/// Drops values that are followed by newer values within [duration].
+/// Bộ chuyển đổi luồng (Stream Transformer) tùy chỉnh triển khai mô hình Debounce
+/// Bỏ các giá trị cũ và phát giá trị mới sau [duration]
 class DebounceStreamTransformer<T> extends StreamTransformerBase<T, T> {
   final Duration duration;
 
@@ -30,9 +30,9 @@ class DebounceStreamTransformer<T> extends StreamTransformerBase<T, T> {
             }
           },
           onDone: () {
-            // If there's an ongoing timer, wait until it completes or close
+            // Đợi cho đến khi nó kết thúc hoặc đóng lại bộ đếm đang chạy
             if (timer != null && timer!.isActive) {
-              // Let the pending timer finish before closing
+              // Để bộ đém chạy rồi đóng luồng sau khi kết thúc
               timer = Timer(duration, () {
                 if (!controller!.isClosed) {
                   controller.close();
@@ -60,8 +60,8 @@ class DebounceStreamTransformer<T> extends StreamTransformerBase<T, T> {
   }
 }
 
-/// Custom Stream Transformer implementing the Throttle pattern.
-/// Emits the first item, then suppresses emissions for [duration].
+/// Bộ chuyển đổi luồng (Stream Transformer) tùy chỉnh triển khai mô hình Throttle
+/// Phát sự kiện đầu tiên, sau đó tạm thời ngăn chặn các sự kiện khác trong [duration]
 class ThrottleStreamTransformer<T> extends StreamTransformerBase<T, T> {
   final Duration duration;
 
@@ -116,14 +116,14 @@ class ThrottleStreamTransformer<T> extends StreamTransformerBase<T, T> {
   }
 }
 
-/// Extension methods adding reactive operator methods directly to any [Stream].
+/// Các phương thức mở rộng bổ sung trực tiếp các reactive operator methods vào bất kỳ [Stream] nào
 extension ReactiveStreamExtension<T> on Stream<T> {
-  /// Debounces stream events by the specified [duration].
+  /// Debounces các sự kiện trong stream dựa trên [duration]
   Stream<T> debounce(Duration duration) {
     return transform(DebounceStreamTransformer<T>(duration));
   }
 
-  /// Throttles stream events by the specified [duration].
+  /// Throttles các sự kiện trong stream dựa trên [duration]
   Stream<T> throttle(Duration duration) {
     return transform(ThrottleStreamTransformer<T>(duration));
   }

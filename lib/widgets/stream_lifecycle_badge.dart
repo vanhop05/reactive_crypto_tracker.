@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Visual monitor widget showcasing the active status and lifecycle of the reactive stream.
+/// Tiện ích giám sát trực quan hiển thị trạng thái hoạt động và vòng đời của reactive stream
 class StreamLifecycleBadge extends StatelessWidget {
   final int activeListeners;
   final bool isSafeDisposed;
@@ -12,7 +12,7 @@ class StreamLifecycleBadge extends StatelessWidget {
     this.isSafeDisposed = false,
     this.label = 'Broadcast Stream',
   });
-
+  // Giao diện trạng thái hoạt động của stream
   @override
   Widget build(BuildContext context) {
     final isListening = activeListeners > 0 && !isSafeDisposed;
