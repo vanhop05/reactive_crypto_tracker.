@@ -205,39 +205,39 @@ flutter run -d windows
 
 ---
 
-### 2. Kịch Bản Commit Git Chuẩn Cho 2 Thành Viên
+### 2. Commit Git Của Các Thành Viên
 
 ```bash
-# 1. Khởi tạo Git repository
+# 1. Khởi tạo Git repository [Trần Văn Hợp]
 git init
 git branch -M main
 
 # 2. COMMIT 1: Trần Văn Hợp (Khởi tạo kiến trúc Core, Stream Service & Models)
 git config user.name "Tran Van Hop"
-git config user.email "tranvanhop@example.com"
+git config user.email "Tranvanhopcr7@gmail.com"
 git add pubspec.yaml analysis_options.yaml .gitignore lib/models/market_tick.dart lib/models/crypto_asset.dart lib/models/event_loop_step.dart lib/services/crypto_price_stream_service.dart lib/services/event_loop_simulator_service.dart
 git commit -m "feat(core): initialize reactive stream architecture and price simulation engine [Tran Van Hop]"
 
 # 3. COMMIT 2: Mai Tuấn An (Thiết kế Dark Theme, Custom Widgets, Order Book & Native Android/iOS)
 git config user.name "Mai Tuan An"
-git config user.email "maituanan@example.com"
+git config user.email "11a1maituanan@gmail.com"
 git add .env.example lib/core/theme/ lib/models/order_book_entry.dart lib/services/order_book_stream_service.dart lib/widgets/ android/ ios/ web/ windows/ linux/ macos/
 git commit -m "feat(ui): design fintech dark theme, order book, custom painters, and multiplatform configs [Mai Tuan An]"
 
 # 4. COMMIT 3: Trần Văn Hợp (Toán tử Debounce/Throttle & Toàn bộ Unit Test Suite)
 git config user.name "Tran Van Hop"
-git config user.email "tranvanhop@example.com"
+git config user.email "Tranvanhopcr7@gmail.com"
 git add lib/core/transformers/stream_transformers.dart test/
 git commit -m "feat(operators): implement custom debounce/throttle transformers and unit tests [Tran Van Hop]"
 
 # 5. COMMIT 4: Mai Tuấn An (Toàn bộ Màn hình giao diện, Giám sát hủy luồng & Tài liệu README)
 git config user.name "Mai Tuan An"
-git config user.email "maituanan@example.com"
+git config user.email "11a1maituanan@gmail.com"
 git add lib/views/ lib/main.dart README.md
 git commit -m "feat(views): implement responsive market screens, safe disposal lifecycle UI, and documentation [Mai Tuan An]"
 
-# 6. Đẩy lên GitHub công khai
-git remote add origin https://github.com/<tai-khoan-cua-ban>/reactive_crypto_tracker.git
+# 6. Đẩy lên GitHub công khai [Trần Văn Hợp]
+git remote add origin https://github.com/vanhop05/reactive_crypto_tracker..git
 git push -u origin main
 ```
 
@@ -271,5 +271,5 @@ Kết quả hiển thị trên console:
   -> Đã nhận: Sub1=1 ticks, Sub2=1 ticks.
   -> PASS: Đã hủy sub1 & sub2 an toàn. Subscribers giảm từ 1 về 0.
 
-TOÀN BỘ CÁC BÀI TEST CHỦ ĐỀ 02 ĐÃ VƯỢT QUA 100%!
+=> TOÀN BỘ CÁC BÀI TEST CHỦ ĐỀ 02 ĐÃ VƯỢT QUA 100%
 ```
