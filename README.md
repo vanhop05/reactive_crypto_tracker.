@@ -52,29 +52,9 @@
 
 ### 1. Mô Hình Dart Event Loop & Hai Hàng Đợi (Queues)
 
-```
-        +-----------------------------------------+
-        |            Main Call Stack              |
-        |  (Thực thi mã lệnh đồng bộ tuần tự)      |
-        +--------------------+--------------------+
-                             | (Khi Stack trống)
-                             v
-        +-----------------------------------------+
-        |            Microtask Queue              |
-        |  - scheduleMicrotask()                  |
-        |  - Future.microtask()                   |
-        |  (Ưu tiên TUYỆT ĐỐI trước Event Queue)  |
-        +--------------------+--------------------+
-                             | (Khi Microtask Queue trống)
-                             v
-        +-----------------------------------------+
-        |              Event Queue                |
-        |  - Future()                             |
-        |  - Future.delayed()                     |
-        |  - Stream events                        |
-        |  - User Touch / I/O Network Events      |
-        +-----------------------------------------+
-```
+<p align="center">
+  <img src="docs/images/event_loop_architecture.png" alt="Mô Hình Dart Event Loop & Hai Hàng Đợi" width="480" />
+</p>
 
 ### 2. So Sánh Single-Subscription vs Broadcast Stream
 
