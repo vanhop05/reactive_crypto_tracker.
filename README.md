@@ -15,17 +15,16 @@
 4. [Cấu Hình Biến Môi Trường (.env) & Google Services](#cau-hinh-bien-moi-truong)
 5. [Hướng Dẫn Cài Đặt & Chạy Ứng Dụng (Android, iOS, Web)](#huong-dan-cai-dat)
 6. [Bảng Phân Chia Công Việc & Kịch Bản Commit Git](#phan-chia-cong-viec)
-7. [Kịch Bản Quay Video Clip Thao Tác Thực Tế & Thuyết Trình](#kich-ban-video)
-8. [Kiểm Thử Tự Động (#kiem-thu-tu-dong)
+7. [Kiểm Thử Tự Động]  (#kiem-thu-tu-dong)
 
 ---
 
 <a id="gioi-thieu-du-an"></a>
-## GIỚI THIỆU DỰ ÁNq
+## GIỚI THIỆU DỰ ÁN
 
 **CryptoPulse Reactive** là ứng dụng di động đa nền tảng được xây dựng nhằm giải quyết bài toán xử lý và hiển thị luồng dữ liệu biến động cực nhanh trong thời gian thực (real-time high-frequency streaming) mà không làm lag giao diện người dùng, đồng thời quản lý bộ nhớ an toàn tuyệt đối.
 
-Ứng dụng hiện thực hóa đầy đủ các yêu cầu cốt lõi của **Chủ đề 02**:
+Ứng dụng sử dụng các kỹ thuật:
 * Mô hình xử lý bất đồng bộ trong Dart: **Event Loop**, **Call Stack**, **Microtask Queue**, **Event Queue**, **Future**, và **async/await**.
 * Cơ chế phản ứng dữ liệu hướng luồng: **Stream**, **StreamController.broadcast()**, đa lắng nghe (Multi-subscriber).
 * Các toán tử biến đổi dữ liệu tùy biến: **Debounce** (lọc tìm kiếm thông minh) và **Throttle** (tiết giảm tần suất cập nhật UI).
@@ -238,7 +237,7 @@ dart run test/verify_pure_dart.dart
 Kết quả hiển thị trên console:
 ```text
 =============================================
- CHẠY KIỂM THỬ TỰ ĐỘNG CHỦ ĐỀ 02 (DART TEST)
+ CHẠY KIỂM THỬ TỰ ĐỘNG  (DART TEST)
 =============================================
 [Test 1] Kiểm tra thứ tự Event Loop & Microtask Queue:
   -> PASS: Thứ tự ưu tiên chính xác tuyệt đối: Sync -> Microtasks -> Future.
