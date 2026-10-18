@@ -92,6 +92,80 @@ class _CryptoMarketScreenState extends State<CryptoMarketScreen> {
           ],
         ),
         actions: [
+          StreamBuilder<DataSourceMode>(
+            stream: service.modeStream,
+            initialData: service.currentMode,
+            builder: (context, modeSnap) {
+              final isBinance = modeSnap.data == DataSourceMode.binanceLive;
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
+                child: InkWell(
+                  onTap: () async {
+                    await service.toggleDataSource();
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Row(
+                            children: [
+                              Icon(
+                                service.isBinanceLive ? Icons.sensors : Icons.memory,
+                                color: service.isBinanceLive ? const Color(0xFFF3BA2F) : const Color(0xFF10B981),
+                              ),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  service.isBinanceLive
+                                      ? '⚡ Đã kết nối WebSocket sàn Binance (wss://stream.binance.com)'
+                                      : '🔄 Đã chuyển về chế độ Mô Phỏng nội bộ',
+                                  style: const TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ],
+                          ),
+                          backgroundColor: const Color(0xFF1E2329),
+                          behavior: SnackBarBehavior.floating,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                          duration: const Duration(seconds: 2),
+                        ),
+                      );
+                    }
+                  },
+                  borderRadius: BorderRadius.circular(20),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: (isBinance ? const Color(0xFFF3BA2F) : const Color(0xFF10B981)).withOpacity(0.15),
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                        color: isBinance ? const Color(0xFFF3BA2F) : const Color(0xFF10B981),
+                        width: 1.2,
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          isBinance ? Icons.sensors : Icons.memory,
+                          color: isBinance ? const Color(0xFFF3BA2F) : const Color(0xFF10B981),
+                          size: 15,
+                        ),
+                        const SizedBox(width: 5),
+                        Text(
+                          isBinance ? 'BINANCE LIVE' : 'MÔ PHỎNG',
+                          style: TextStyle(
+                            color: isBinance ? const Color(0xFFF3BA2F) : const Color(0xFF10B981),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 11,
+                            letterSpacing: 0.5,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
           IconButton(
             tooltip: 'Tùy chỉnh tần số Stream',
             icon: const Icon(Icons.tune),
@@ -125,39 +199,47 @@ class _CryptoMarketScreenState extends State<CryptoMarketScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Row(
-                          children: [
-                            Container(
-                              width: 10,
-                              height: 10,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: service.isRunning
-                                    ? const Color(0xFF10B981)
-                                    : const Color(0xFFEF4444),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: (service.isRunning
-                                            ? const Color(0xFF10B981)
-                                            : const Color(0xFFEF4444))
-                                        .withOpacity(0.5),
-                                    blurRadius: 8,
+                        StreamBuilder<DataSourceMode>(
+                          stream: service.modeStream,
+                          initialData: service.currentMode,
+                          builder: (context, modeSnap) {
+                            final isBinance = modeSnap.data == DataSourceMode.binanceLive;
+                            final dotColor = isBinance
+                                ? const Color(0xFFF3BA2F)
+                                : (service.isRunning ? const Color(0xFF10B981) : const Color(0xFFEF4444));
+                            return Row(
+                              children: [
+                                Container(
+                                  width: 10,
+                                  height: 10,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: dotColor,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: dotColor.withOpacity(0.6),
+                                        blurRadius: 8,
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              service.isRunning
-                                  ? 'Stream: ${service.tickIntervalMs}ms / tick'
-                                  : 'Stream: Đang tạm dừng',
-                              style: const TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                                fontFamily: 'monospace',
-                              ),
-                            ),
-                          ],
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  isBinance
+                                      ? 'Binance: wss://stream.binance.com'
+                                      : (service.isRunning
+                                          ? 'Mô phỏng: ${service.tickIntervalMs}ms / tick'
+                                          : 'Mô phỏng: Đang tạm dừng'),
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                    fontFamily: 'monospace',
+                                    color: isBinance ? const Color(0xFFF3BA2F) : Colors.white,
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
                         ),
                         StreamLifecycleBadge(
                           activeListeners: listenerSnap.data ?? 0,
