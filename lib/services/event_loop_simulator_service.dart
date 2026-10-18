@@ -42,10 +42,7 @@ class EventLoopSimulatorService {
     _stepsController.add(List.unmodifiable(_recordedSteps));
   }
 
-  // =========================================================================
-  // [YÊU CẦU 1]: EVENT LOOP & MICROTASK QUEUE - THỰC NGHIỆM THỨ TỰ ƯU TIÊN
-  // Quy tắc vàng: Mã Đồng Bộ -> Microtask Queue -> Event Queue (Future / Timer)
-  // =========================================================================
+  /// Chạy thí nghiệm mô phỏng thứ tự ưu tiên: Mã Đồng Bộ -> Microtask Queue -> Event Queue
   Future<void> runExperiment() async {
     if (_isRunning) return;
     _isRunning = true;

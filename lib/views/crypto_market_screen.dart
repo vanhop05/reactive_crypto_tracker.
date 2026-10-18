@@ -8,10 +8,7 @@ import '../widgets/price_ticker_card.dart';
 import '../widgets/stream_lifecycle_badge.dart';
 import 'crypto_detail_screen.dart';
 
-/// Màn hình Thị Trường: Màn hình chính của ứng dụng minh họa:
-/// 1. [YÊU CẦU 4: BROADCAST STREAM]: Lắng nghe luồng giá tập trung qua StreamBuilder.
-/// 2. [YÊU CẦU 5: DEBOUNCE]: Áp dụng debounce 400ms ở ô tìm kiếm chống nghẽn UI.
-/// 3. [YÊU CẦU 2: FUTURE & ASYNC/AWAIT]: Nút bấm BINANCE LIVE chuyển đổi nguồn dữ liệu bất đồng bộ.
+/// Màn hình Thị Trường hiển thị giá tiền mã hóa theo thời gian thực
 class CryptoMarketScreen extends StatefulWidget {
   const CryptoMarketScreen({super.key});
 
@@ -22,7 +19,7 @@ class CryptoMarketScreen extends StatefulWidget {
 class _CryptoMarketScreenState extends State<CryptoMarketScreen> {
   final TextEditingController _searchController = TextEditingController();
 
-  // [YÊU CẦU 3 & 5]: StreamController quản lý luồng từ khóa tìm kiếm có áp dụng Debounce
+  // StreamController quản lý từ khóa tìm kiếm
   final StreamController<String> _searchQueryController = StreamController<String>();
   StreamSubscription<String>? _searchSubscription;
 
@@ -36,8 +33,7 @@ class _CryptoMarketScreenState extends State<CryptoMarketScreen> {
   void initState() {
     super.initState();
 
-    // [YÊU CẦU 5: TOÁN TỬ DEBOUNCE]
-    // Chờ đúng 400ms sau khi người dùng ngừng gõ phím mới tiến hành lọc danh sách
+    // Chờ 400ms sau khi người dùng ngừng gõ phím mới tiến hành lọc danh sách (Debounce)
     _searchSubscription = _searchQueryController.stream
         .debounce(const Duration(milliseconds: 400))
         .listen((query) {
@@ -96,7 +92,7 @@ class _CryptoMarketScreenState extends State<CryptoMarketScreen> {
           ],
         ),
         actions: [
-          // [YÊU CẦU 2: FUTURE & ASYNC/AWAIT]: Nút bấm chuyển đổi nguồn dữ liệu Mô Phỏng / Binance Live
+          // Nút bấm chuyển đổi nguồn dữ liệu Mô Phỏng / Binance Live
           StreamBuilder<DataSourceMode>(
             stream: service.modeStream,
             initialData: service.currentMode,
@@ -180,7 +176,7 @@ class _CryptoMarketScreenState extends State<CryptoMarketScreen> {
         ],
       ),
 
-      // [YÊU CẦU 4: BROADCAST STREAM]: StreamBuilder tự động dựng lại giao diện khi có MarketTick mới
+      // StreamBuilder tự động cập nhật giao diện khi có dữ liệu giá mới
       body: StreamBuilder<MarketTick>(
         stream: service.marketStream,
         builder: (context, snapshot) {
@@ -255,7 +251,7 @@ class _CryptoMarketScreenState extends State<CryptoMarketScreen> {
                 },
               ),
 
-              // [YÊU CẦU 5]: Ô tìm kiếm coin tích hợp toán tử Debounce
+              // Ô tìm kiếm coin tích hợp toán tử Debounce 400ms
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: TextField(

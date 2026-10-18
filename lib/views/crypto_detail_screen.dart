@@ -11,10 +11,7 @@ import '../widgets/mini_price_chart.dart';
 import '../widgets/order_book_widget.dart';
 import '../widgets/stream_lifecycle_badge.dart';
 
-/// Màn hình Chi Tiết Coin: Minh chứng thực tế cho 3 yêu cầu cốt lõi:
-/// 1. [YÊU CẦU 4]: Lắng nghe luồng Broadcast Stream đa hướng (cùng lúc với Trang chủ).
-/// 2. [YÊU CẦU 5]: Áp dụng toán tử Throttle (300ms) để tiết lưu sự kiện, chống quá tải UI.
-/// 3. [QUẢN LÝ VÒNG ĐỜI]: Hủy đăng ký an toàn trong dispose() để chống thất thoát bộ nhớ (Memory Leak).
+/// Màn hình hiển thị thông tin chi tiết một đồng coin theo thời gian thực.
 class CryptoDetailScreen extends StatefulWidget {
   final CryptoAsset initialAsset;
 
@@ -75,7 +72,7 @@ class _CryptoDetailScreenState extends State<CryptoDetailScreen> {
     _connectPriceStream();
   }
 
-  /// [YÊU CẦU 4 & 5]: Lắng nghe Broadcast Stream và áp dụng toán tử Throttle 300ms
+  /// Lắng nghe luồng giá của đồng coin này và áp dụng Throttle 300ms
   void _connectPriceStream() {
     _tickSubscription?.cancel();
 
@@ -97,8 +94,7 @@ class _CryptoDetailScreenState extends State<CryptoDetailScreen> {
     );
   }
 
-  /// [QUAN TRỌNG NHẤT]: Hủy toàn bộ StreamSubscription khi người dùng bấm Back
-  /// Giúp giải phóng tài nguyên và chống tràn bộ nhớ (Memory Leak)
+  /// Hủy toàn bộ StreamSubscription khi thoát màn hình để giải phóng bộ nhớ
   @override
   void dispose() {
     _tickSubscription?.cancel();
