@@ -152,18 +152,18 @@ Tạo thư mục đích trên máy, sau đó tải dự án về máy:
 ```bash
 git clone "https://github.com/vanhop05/reactive_crypto_tracker." tenthumuc
 ```
-### Bước 1: Tải các gói phụ thuộc (Dependencies)
+### Bước 2: Tải các gói phụ thuộc (Dependencies)
 Mở terminal tại thư mục gốc của dự án (`reactive_crypto_tracker`):
 ```bash
 flutter pub get
 ```
 
-### Bước 2: Kiểm tra thiết bị khả dụng
+### Bước 3: Kiểm tra thiết bị khả dụng
 ```bash
 flutter devices
 ```
 
-### Bước 3: Biên dịch & Chạy trên các hệ điều hành
+### Bước 4: Biên dịch & Chạy trên các hệ điều hành
 
 #### 1. Chạy trên Android (Real Device & Emulator)
 * **Máy ảo (Emulator):** Mở Android Studio -> Virtual Device Manager -> Khởi động máy ảo Pixel/Galaxy.
