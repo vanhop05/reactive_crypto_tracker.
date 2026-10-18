@@ -31,7 +31,7 @@ class _EventLoopLabScreenState extends State<EventLoopLabScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Thẻ hiển thị lý thuyết kiến trúc Event Loop
+            // Thẻ hiển thị tóm tắt kiến trúc Event Loop trực quan, đơn giản
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -44,20 +44,20 @@ class _EventLoopLabScreenState extends State<EventLoopLabScreen> {
                 children: [
                   const Row(
                     children: [
-                      Icon(Icons.architecture, color: Color(0xFF06B6D4), size: 22),
+                      Icon(Icons.hub_outlined, color: Color(0xFF06B6D4), size: 22),
                       SizedBox(width: 8),
                       Text(
-                        'Cơ Chế Dart Event Loop & Hàng Đợi',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        'Cơ Chế Dart Event Loop & Thứ Tự Hàng Đợi',
+                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 12),
-                  const Text(
-                    'Dart là ngôn ngữ đơn luồng (Single-threaded). Event Loop điều phối việc thực thi mã nguồn thông qua 2 hàng đợi chính theo thứ tự ưu tiên tuyệt đối:',
-                    style: TextStyle(fontSize: 13, height: 1.5),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Quy tắc ưu tiên: Mã đồng bộ chạy ngay ➔ Hút cạn Microtask Queue ➔ Xử lý Event Queue.',
+                    style: TextStyle(fontSize: 13, color: Colors.grey[300]),
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 14),
                   _buildQueueFlowDiagram(),
                 ],
               ),
@@ -65,9 +65,9 @@ class _EventLoopLabScreenState extends State<EventLoopLabScreen> {
 
             const SizedBox(height: 16),
 
-            // Action Card: Run Experiment
+            // Thẻ điều khiển thực nghiệm
             Container(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
                 color: Theme.of(context).cardTheme.color,
                 borderRadius: BorderRadius.circular(16),
@@ -83,9 +83,9 @@ class _EventLoopLabScreenState extends State<EventLoopLabScreen> {
                           'Thực Nghiệm Thứ Tự Ưu Tiên',
                           style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                         ),
-                        const SizedBox(height: 4),
+                        const SizedBox(height: 2),
                         Text(
-                          'Kiểm chứng Microtask Queue chạy trước Event Queue dù khai báo sau.',
+                          'Kiểm chứng Microtask Queue luôn chạy trước Event Queue dù khai báo sau.',
                           style: TextStyle(fontSize: 12, color: Colors.grey[400]),
                         ),
                       ],
@@ -115,7 +115,7 @@ class _EventLoopLabScreenState extends State<EventLoopLabScreen> {
             ),
             const SizedBox(height: 10),
 
-            // Live Execution Log Stream
+            // Dòng dữ liệu hiển thị nhật ký thực thi trực tiếp
             StreamBuilder<List<EventLoopStep>>(
               stream: _simulatorService.stepsStream,
               initialData: const [],
@@ -124,7 +124,7 @@ class _EventLoopLabScreenState extends State<EventLoopLabScreen> {
 
                 if (steps.isEmpty) {
                   return Container(
-                    height: 160,
+                    height: 140,
                     width: double.infinity,
                     decoration: BoxDecoration(
                       color: const Color(0xFF161B26),
@@ -245,41 +245,160 @@ class _EventLoopLabScreenState extends State<EventLoopLabScreen> {
     );
   }
 
+  /// Sơ đồ luồng hàng đợi Event Loop tinh gọn, tự co giãn theo kích thước màn hình
   Widget _buildQueueFlowDiagram() {
-    return Column(
-      children: [
-        _buildDiagramNode('1. Call Stack (Đồng Bộ)', 'Code chạy tuần tự đến khi stack trống', Colors.blueAccent),
-        const Icon(Icons.arrow_downward, size: 16, color: Colors.grey),
-        _buildDiagramNode('2. Microtask Queue (Ưu Tiên Cao)', 'scheduleMicrotask, Future.microtask', Colors.pinkAccent),
-        const Icon(Icons.arrow_downward, size: 16, color: Colors.grey),
-        _buildDiagramNode('3. Event Queue (Sự Kiện/Timer/I/O)', 'Future(), Future.delayed(), Stream, User Touch', Colors.amberAccent),
-      ],
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isWide = constraints.maxWidth >= 560;
+
+        if (isWide) {
+          // Giao diện dạng thanh hàng ngang (Pipeline) hiện đại, tinh gọn trên màn hình rộng
+          return Row(
+            children: [
+              Expanded(
+                child: _buildCompactNode(
+                  stepNum: '1',
+                  title: 'Mã Đồng Bộ',
+                  subtitle: 'Call Stack chạy tuần tự',
+                  example: 'print(), lệnh gán, tính toán',
+                  color: Colors.blueAccent,
+                  icon: Icons.flash_on,
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 6),
+                child: Icon(Icons.arrow_forward_rounded, size: 18, color: Colors.grey),
+              ),
+              Expanded(
+                child: _buildCompactNode(
+                  stepNum: '2',
+                  title: 'Microtask Queue',
+                  subtitle: 'Ưu tiên giải quyết trước',
+                  example: 'scheduleMicrotask()',
+                  color: Colors.pinkAccent,
+                  icon: Icons.priority_high,
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 6),
+                child: Icon(Icons.arrow_forward_rounded, size: 18, color: Colors.grey),
+              ),
+              Expanded(
+                child: _buildCompactNode(
+                  stepNum: '3',
+                  title: 'Event Queue',
+                  subtitle: 'Chạy sau khi hết microtask',
+                  example: 'Future(), Timer, Stream',
+                  color: Colors.amberAccent,
+                  icon: Icons.hourglass_top,
+                ),
+              ),
+            ],
+          );
+        }
+
+        // Giao diện danh sách gọn nhẹ cho màn hình hẹp
+        return Column(
+          children: [
+            _buildCompactNode(
+              stepNum: '1',
+              title: 'Mã Đồng Bộ (Call Stack)',
+              subtitle: 'Chạy tuần tự ngay lập tức',
+              example: 'print(), lệnh gán',
+              color: Colors.blueAccent,
+              icon: Icons.flash_on,
+            ),
+            const SizedBox(height: 6),
+            const Icon(Icons.arrow_downward_rounded, size: 16, color: Colors.grey),
+            const SizedBox(height: 6),
+            _buildCompactNode(
+              stepNum: '2',
+              title: 'Microtask Queue (Ưu Tiên Cao)',
+              subtitle: 'Ưu tiên giải quyết trước mọi Future',
+              example: 'scheduleMicrotask(), Future.microtask()',
+              color: Colors.pinkAccent,
+              icon: Icons.priority_high,
+            ),
+            const SizedBox(height: 6),
+            const Icon(Icons.arrow_downward_rounded, size: 16, color: Colors.grey),
+            const SizedBox(height: 6),
+            _buildCompactNode(
+              stepNum: '3',
+              title: 'Event Queue (Sự Kiện Sau Cùng)',
+              subtitle: 'Chỉ chạy sau khi Microtask Queue trống',
+              example: 'Future(), Timer, Stream',
+              color: Colors.amberAccent,
+              icon: Icons.hourglass_top,
+            ),
+          ],
+        );
+      },
     );
   }
 
-  Widget _buildDiagramNode(String title, String subtitle, Color color) {
+  /// Khối thông tin nhỏ gọn cho từng bước trong Event Loop
+  Widget _buildCompactNode({
+    required String stepNum,
+    required String title,
+    required String subtitle,
+    required String example,
+    required Color color,
+    required IconData icon,
+  }) {
     return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.12),
-        borderRadius: BorderRadius.circular(10),
+        color: color.withOpacity(0.08),
+        borderRadius: BorderRadius.circular(12),
         border: Border.all(color: color.withOpacity(0.35)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-              color: color,
-            ),
+          Row(
+            children: [
+              Container(
+                width: 20,
+                height: 20,
+                decoration: BoxDecoration(
+                  color: color.withOpacity(0.2),
+                  shape: BoxShape.circle,
+                ),
+                child: Center(
+                  child: Text(
+                    stepNum,
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                      color: color,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 6),
+              Expanded(
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 12.5,
+                    fontWeight: FontWeight.bold,
+                    color: color,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              Icon(icon, size: 15, color: color),
+            ],
           ),
+          const SizedBox(height: 6),
           Text(
             subtitle,
-            style: TextStyle(fontSize: 11, color: Colors.grey[400]),
+            style: const TextStyle(fontSize: 11, color: Colors.white70),
+          ),
+          const SizedBox(height: 3),
+          Text(
+            example,
+            style: TextStyle(fontSize: 10, color: Colors.grey[400], fontStyle: FontStyle.italic),
           ),
         ],
       ),
