@@ -184,25 +184,6 @@ flutter run -d windows
 
 ---
 
-### 2. Lịch Sử Commit Git Thực Tế Của Các Thành Viên
-
-Dự án được xây dựng và phối hợp liên tục giữa 2 thành viên thông qua hệ thống quản lý phiên bản Git & GitHub, phân định rõ ràng trách nhiệm chuyên môn theo chuẩn Conventional Commits:
-
-| Mã Commit | Thành Viên Thực Hiện | Thời Gian | Thông Điệp Commit & Nội Dung Thực Hiện |
-| :---: | :--- | :---: | :--- |
-| `608899a` | **Trần Văn Hợp** *(Trưởng nhóm)* | 15/10/2026 | `feat(core): initialize reactive stream architecture and price simulation engine` — Khởi tạo kiến trúc Core, Stream Service & Models. |
-| `599359d` | **Mai Tuấn An** | 15/10/2026 | `feat(ui): design fintech dark theme, order book, custom painters, and multiplatform configs` — Thiết kế giao diện Dark Theme, vẽ biểu đồ giá & Sổ lệnh. |
-| `ae11f26` | **Trần Văn Hợp** *(Trưởng nhóm)* | 15/10/2026 | `feat(operators): implement custom debounce/throttle transformers and unit tests` — Lập trình toán tử Debounce/Throttle & Unit Test Suite. |
-| `cc2e573` | **Mai Tuấn An** | 15/10/2026 | `feat(views): implement responsive market screens, safe disposal lifecycle UI, and documentation` — Xây dựng màn hình Responsive, giám sát hủy luồng an toàn. |
-| `eaeeab0` | **Trần Văn Hợp** *(Trưởng nhóm)* | 18/10/2026 | `feat(service): integrate Binance WebSocket live stream with toggle mode` — Tích hợp luồng giá thời gian thực từ sàn Binance WebSocket. |
-| `eb0e157` | **Mai Tuấn An** | 18/10/2026 | `feat(ui): add Binance Live / Simulation toggle chip on AppBar and real-time status indicator` — Giao diện chuyển đổi linh hoạt Binance Live / Mô phỏng. |
-| `ed299dd` | **Trần Văn Hợp** *(Trưởng nhóm)* | 18/10/2026 | `feat(platform): add native Windows desktop support and CMake toolchain` — Tối ưu hóa và hỗ trợ chính thức nền tảng Windows Desktop. |
-| `16f5bd8` | **Trần Văn Hợp** *(Trưởng nhóm)* | 18/10/2026 | `docs: translate all code comments to Vietnamese across services, views, and core modules` — Việt hóa 100% chú thích mã nguồn để phục vụ báo cáo. |
-| `5f2b41a` | **Mai Tuấn An** | 18/10/2026 | `refactor(lib): streamline and simplify entire codebase for beginners` — Tối ưu hóa code tinh gọn, trong sáng cho người mới bắt đầu. |
-| `20c6097` | **Mai Tuấn An** | 18/10/2026 | `giao diện: tối giản thanh điều hướng còn 2 tab và tinh gọn màn hình Event Loop` — Tinh gọn app còn 2 tab chính (Thị Trường & Event Loop). |
-| `986711b` | **Mai Tuấn An** | 18/10/2026 | `tài liệu: cập nhật sơ đồ kiến trúc Dart Event Loop dạng hình ảnh trực quan trong README` — Cập nhật sơ đồ màu trực quan cho Event Loop. |
-| `6be9a12` | **Mai Tuấn An** | 18/10/2026 | `tài liệu: sửa lỗi định dạng liên kết mục lục kiểm thử tự động trong README` — Chuẩn hóa liên kết neo nội bộ trong tài liệu. |
-
 #### Kịch bản dòng lệnh Git tiêu biểu của nhóm:
 
 ```bash
