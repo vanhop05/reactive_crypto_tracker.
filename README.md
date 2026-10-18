@@ -184,39 +184,64 @@ flutter run -d windows
 
 ---
 
-### 2. Commit Git Của Các Thành Viên
+### 2. Lịch Sử Commit Git Thực Tế Của Các Thành Viên
+
+Dự án được xây dựng và phối hợp liên tục giữa 2 thành viên thông qua hệ thống quản lý phiên bản Git & GitHub, phân định rõ ràng trách nhiệm chuyên môn theo chuẩn Conventional Commits:
+
+| Mã Commit | Thành Viên Thực Hiện | Thời Gian | Thông Điệp Commit & Nội Dung Thực Hiện |
+| :---: | :--- | :---: | :--- |
+| `608899a` | **Trần Văn Hợp** *(Trưởng nhóm)* | 15/10/2026 | `feat(core): initialize reactive stream architecture and price simulation engine` — Khởi tạo kiến trúc Core, Stream Service & Models. |
+| `599359d` | **Mai Tuấn An** | 15/10/2026 | `feat(ui): design fintech dark theme, order book, custom painters, and multiplatform configs` — Thiết kế giao diện Dark Theme, vẽ biểu đồ giá & Sổ lệnh. |
+| `ae11f26` | **Trần Văn Hợp** *(Trưởng nhóm)* | 15/10/2026 | `feat(operators): implement custom debounce/throttle transformers and unit tests` — Lập trình toán tử Debounce/Throttle & Unit Test Suite. |
+| `cc2e573` | **Mai Tuấn An** | 15/10/2026 | `feat(views): implement responsive market screens, safe disposal lifecycle UI, and documentation` — Xây dựng màn hình Responsive, giám sát hủy luồng an toàn. |
+| `eaeeab0` | **Trần Văn Hợp** *(Trưởng nhóm)* | 18/10/2026 | `feat(service): integrate Binance WebSocket live stream with toggle mode` — Tích hợp luồng giá thời gian thực từ sàn Binance WebSocket. |
+| `eb0e157` | **Mai Tuấn An** | 18/10/2026 | `feat(ui): add Binance Live / Simulation toggle chip on AppBar and real-time status indicator` — Giao diện chuyển đổi linh hoạt Binance Live / Mô phỏng. |
+| `ed299dd` | **Trần Văn Hợp** *(Trưởng nhóm)* | 18/10/2026 | `feat(platform): add native Windows desktop support and CMake toolchain` — Tối ưu hóa và hỗ trợ chính thức nền tảng Windows Desktop. |
+| `16f5bd8` | **Trần Văn Hợp** *(Trưởng nhóm)* | 18/10/2026 | `docs: translate all code comments to Vietnamese across services, views, and core modules` — Việt hóa 100% chú thích mã nguồn để phục vụ báo cáo. |
+| `5f2b41a` | **Mai Tuấn An** | 18/10/2026 | `refactor(lib): streamline and simplify entire codebase for beginners` — Tối ưu hóa code tinh gọn, trong sáng cho người mới bắt đầu. |
+| `20c6097` | **Mai Tuấn An** | 18/10/2026 | `giao diện: tối giản thanh điều hướng còn 2 tab và tinh gọn màn hình Event Loop` — Tinh gọn app còn 2 tab chính (Thị Trường & Event Loop). |
+| `986711b` | **Mai Tuấn An** | 18/10/2026 | `tài liệu: cập nhật sơ đồ kiến trúc Dart Event Loop dạng hình ảnh trực quan trong README` — Cập nhật sơ đồ màu trực quan cho Event Loop. |
+| `6be9a12` | **Mai Tuấn An** | 18/10/2026 | `tài liệu: sửa lỗi định dạng liên kết mục lục kiểm thử tự động trong README` — Chuẩn hóa liên kết neo nội bộ trong tài liệu. |
+
+#### Kịch bản dòng lệnh Git tiêu biểu của nhóm:
 
 ```bash
-# 1. Khởi tạo Git repository [Trần Văn Hợp]
+# 1. Khởi tạo Git repository & nhánh chính [Trần Văn Hợp]
 git init
 git branch -M main
+git remote add origin https://github.com/vanhop05/reactive_crypto_tracker.git
 
-# 2. COMMIT 1: Trần Văn Hợp (Khởi tạo kiến trúc Core, Stream Service & Models)
-git config user.name "Tran Van Hop"
-git config user.email "Tranvanhopcr7@gmail.com"
-git add pubspec.yaml analysis_options.yaml .gitignore lib/models/market_tick.dart lib/models/crypto_asset.dart lib/models/event_loop_step.dart lib/services/crypto_price_stream_service.dart lib/services/event_loop_simulator_service.dart
-git commit -m "feat(core): initialize reactive stream architecture and price simulation engine [Tran Van Hop]"
+# 2. Trần Văn Hợp: Khởi tạo kiến trúc Core, Stream Service & Models
+git config user.name "Trần Văn Hợp"
+git config user.email "vanhop05@gmail.com"
+git add lib/models/ lib/services/crypto_price_stream_service.dart
+git commit -m "feat(core): initialize reactive stream architecture and price simulation engine"
 
-# 3. COMMIT 2: Mai Tuấn An (Thiết kế Dark Theme, Custom Widgets, Order Book & Native Android/iOS)
+# 3. Mai Tuấn An: Thiết kế Dark Theme, Custom Painters & Sổ lệnh Order Book
 git config user.name "Mai Tuan An"
 git config user.email "11a1maituanan@gmail.com"
-git add .env.example lib/core/theme/ lib/models/order_book_entry.dart lib/services/order_book_stream_service.dart lib/widgets/ android/ ios/ web/ windows/ linux/ macos/
-git commit -m "feat(ui): design fintech dark theme, order book, custom painters, and multiplatform configs [Mai Tuan An]"
+git add lib/core/theme/ lib/widgets/ lib/services/order_book_stream_service.dart
+git commit -m "feat(ui): design fintech dark theme, order book, custom painters, and multiplatform configs"
 
-# 4. COMMIT 3: Trần Văn Hợp (Toán tử Debounce/Throttle & Toàn bộ Unit Test Suite)
-git config user.name "Tran Van Hop"
-git config user.email "Tranvanhopcr7@gmail.com"
+# 4. Trần Văn Hợp: Lập trình toán tử Debounce/Throttle Stream & Toàn bộ Unit Test Suite
+git config user.name "Trần Văn Hợp"
+git config user.email "vanhop05@gmail.com"
 git add lib/core/transformers/stream_transformers.dart test/
-git commit -m "feat(operators): implement custom debounce/throttle transformers and unit tests [Tran Van Hop]"
+git commit -m "feat(operators): implement custom debounce/throttle transformers and unit tests"
 
-# 5. COMMIT 4: Mai Tuấn An (Toàn bộ Màn hình giao diện, Giám sát hủy luồng & Tài liệu README)
+# 5. Mai Tuấn An: Màn hình giao diện Responsive & Cơ chế Hủy luồng an toàn (Dispose)
 git config user.name "Mai Tuan An"
 git config user.email "11a1maituanan@gmail.com"
-git add lib/views/ lib/main.dart README.md
-git commit -m "feat(views): implement responsive market screens, safe disposal lifecycle UI, and documentation [Mai Tuan An]"
+git add lib/views/
+git commit -m "feat(views): implement responsive market screens, safe disposal lifecycle UI, and documentation"
 
-# 6. Đẩy lên GitHub công khai [Trần Văn Hợp]
-git remote add origin https://github.com/vanhop05/reactive_crypto_tracker..git
+# 6. Trần Văn Hợp: Tích hợp Binance WebSocket Live Stream & Hỗ trợ Windows Desktop
+git config user.name "Trần Văn Hợp"
+git config user.email "vanhop05@gmail.com"
+git add lib/services/crypto_price_stream_service.dart windows/
+git commit -m "feat(service): integrate Binance WebSocket live stream with toggle mode"
+
+# 7. Đẩy toàn bộ lên GitHub repository
 git push -u origin main
 ```
 
