@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Screen displaying the complete technical documentation and architectural reference for Topic 02.
+/// Màn hình hiển thị toàn bộ tài liệu kỹ thuật và kiến trúc tham chiếu cho Chủ đề 02.
 class ArchitectureGuideScreen extends StatelessWidget {
   const ArchitectureGuideScreen({super.key});
 

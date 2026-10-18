@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import '../models/event_loop_step.dart';
 import '../services/event_loop_simulator_service.dart';
 
-/// Screen presenting an interactive laboratory demonstrating the Dart Event Loop,
-/// Microtask Queue vs Event Queue execution order.
+/// Màn hình phòng thí nghiệm tương tác minh họa trực quan cơ chế Dart Event Loop,
+/// thứ tự thực thi giữa Microtask Queue và Event Queue.
 class EventLoopLabScreen extends StatefulWidget {
   const EventLoopLabScreen({super.key});
 
@@ -31,7 +31,7 @@ class _EventLoopLabScreenState extends State<EventLoopLabScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Theory Architecture Card
+            // Thẻ hiển thị lý thuyết kiến trúc Event Loop
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(

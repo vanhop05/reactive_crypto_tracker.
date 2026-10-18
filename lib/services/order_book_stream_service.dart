@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:math';
 import '../models/order_book_entry.dart';
 
-/// Service generating and streaming live order book depth (Bids & Asks)
+/// Dịch vụ khởi tạo và phát luồng độ sâu sổ lệnh thời gian thực (Lệnh Mua Bids & Lệnh Bán Asks)
 class OrderBookStreamService {
   final String symbol;
   final double currentPrice;
@@ -42,7 +42,7 @@ class OrderBookStreamService {
     double runningBidTotal = 0.0;
     double runningAskTotal = 0.0;
 
-    // Generate 6 Bids (Buy orders, price < currentPrice)
+    // Sinh 6 lệnh Mua (Bids: giá thấp hơn giá hiện tại)
     for (int i = 1; i <= 6; i++) {
       final bidPrice = currentPrice * (1 - (i * 0.0015) - (_random.nextDouble() * 0.0005));
       final amount = 0.1 + _random.nextDouble() * 3.5;
@@ -55,7 +55,7 @@ class OrderBookStreamService {
       ));
     }
 
-    // Generate 6 Asks (Sell orders, price > currentPrice)
+    // Sinh 6 lệnh Bán (Asks: giá cao hơn giá hiện tại)
     for (int i = 1; i <= 6; i++) {
       final askPrice = currentPrice * (1 + (i * 0.0015) + (_random.nextDouble() * 0.0005));
       final amount = 0.1 + _random.nextDouble() * 3.5;
@@ -71,7 +71,7 @@ class OrderBookStreamService {
     _orderBookController.add(entries);
   }
 
-  /// Safe dispose
+  /// Hàm hủy an toàn để giải phóng StreamController và Timer
   Future<void> dispose() async {
     _stopStreaming();
     if (!_orderBookController.isClosed) {

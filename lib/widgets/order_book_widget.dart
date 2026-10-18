@@ -77,7 +77,7 @@ class OrderBookWidget extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 4),
                 child: Row(
                   children: [
-                    // Bid side
+                    // Phía lệnh Mua (Bids)
                     Expanded(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -103,7 +103,7 @@ class OrderBookWidget extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 16),
-                    // Ask side
+                    // Phía lệnh Bán (Asks)
                     Expanded(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,

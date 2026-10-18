@@ -8,8 +8,8 @@ import '../widgets/price_ticker_card.dart';
 import '../widgets/stream_lifecycle_badge.dart';
 import 'crypto_detail_screen.dart';
 
-/// Market screen displaying real-time cryptocurrency tickers using StreamBuilder
-/// and Debounced reactive search input filtering.
+/// Màn hình Thị Trường hiển thị giá tiền mã hóa thời gian thực bằng StreamBuilder
+/// kết hợp bộ lọc tìm kiếm phản ứng có áp dụng kỹ thuật Debounce.
 class CryptoMarketScreen extends StatefulWidget {
   const CryptoMarketScreen({super.key});
 
@@ -20,7 +20,7 @@ class CryptoMarketScreen extends StatefulWidget {
 class _CryptoMarketScreenState extends State<CryptoMarketScreen> {
   final TextEditingController _searchController = TextEditingController();
   
-  // StreamController for debounced search queries
+  // StreamController quản lý các truy vấn tìm kiếm có áp dụng debounce
   final StreamController<String> _searchQueryController = StreamController<String>();
   StreamSubscription<String>? _searchSubscription;
 
@@ -34,7 +34,7 @@ class _CryptoMarketScreenState extends State<CryptoMarketScreen> {
   void initState() {
     super.initState();
 
-    // Set up debounced search stream: waits 400ms after user pauses typing
+    // Thiết lập luồng tìm kiếm debounce: chờ 400ms sau khi người dùng ngừng gõ phím
     _searchSubscription = _searchQueryController.stream
         .debounce(const Duration(milliseconds: 400))
         .listen((query) {
@@ -174,7 +174,7 @@ class _CryptoMarketScreenState extends State<CryptoMarketScreen> {
         ],
       ),
       body: StreamBuilder<MarketTick>(
-        // Listen to the central broadcast stream
+        // Lắng nghe luồng phát đa hướng trung tâm (Broadcast Stream)
         stream: service.marketStream,
         builder: (context, snapshot) {
           final latestTick = snapshot.data;
@@ -183,7 +183,7 @@ class _CryptoMarketScreenState extends State<CryptoMarketScreen> {
 
           return Column(
             children: [
-              // Header Status Panel with Stream info
+              // Bảng trạng thái thông tin kết nối Stream trên Header
               StreamBuilder<int>(
                 stream: service.listenerCountStream,
                 initialData: service.activeListenersCount,
@@ -251,7 +251,7 @@ class _CryptoMarketScreenState extends State<CryptoMarketScreen> {
                 },
               ),
 
-              // Search Bar with Debounce Indicator
+              // Thanh tìm kiếm tích hợp chỉ báo trạng thái Debounce
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: TextField(
@@ -286,7 +286,7 @@ class _CryptoMarketScreenState extends State<CryptoMarketScreen> {
 
               const SizedBox(height: 10),
 
-              // Category Filter Chips
+              // Các nút chip lọc theo danh mục
               SizedBox(
                 height: 38,
                 child: ListView.builder(
@@ -314,7 +314,7 @@ class _CryptoMarketScreenState extends State<CryptoMarketScreen> {
 
               const SizedBox(height: 8),
 
-              // Crypto Assets List
+              // Danh sách các đồng tiền mã hóa (Hiển thị thẻ coin và lắng nghe Stream)
               Expanded(
                 child: filteredAssets.isEmpty
                     ? Center(

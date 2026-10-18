@@ -4,9 +4,9 @@ import 'event_loop_lab_screen.dart';
 import 'stream_operators_lab_screen.dart';
 import 'architecture_guide_screen.dart';
 
-/// Root navigation screen managing multi-platform responsive navigation:
-/// - BottomNavigationBar for Mobile (iOS & Android)
-/// - NavigationRail for Desktop / Tablet / Web
+/// Màn hình điều hướng chính hỗ trợ giao diện đáp ứng đa nền tảng (Responsive Layout):
+/// - BottomNavigationBar cho Di động (iOS & Android)
+/// - NavigationRail cho Máy tính (Desktop / Tablet / Trình duyệt Web rộng)
 class MainNavigationScreen extends StatefulWidget {
   const MainNavigationScreen({super.key});
 
@@ -29,7 +29,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     final isWideScreen = MediaQuery.of(context).size.width >= 768;
 
     if (isWideScreen) {
-      // Desktop / Tablet / Wide Web Layout with NavigationRail
+      // Bố cục màn hình rộng cho Desktop / Tablet / Web với NavigationRail cạnh trái
       return Scaffold(
         body: Row(
           children: [

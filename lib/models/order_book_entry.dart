@@ -3,7 +3,7 @@ class OrderBookEntry {
   final double price;
   final double amount;
   final double total;
-  final bool isBid; // buy = true (bid), sell = false (ask)
+  final bool isBid; // Lệnh mua = true (bid), Lệnh bán = false (ask)
 
   const OrderBookEntry({
     required this.price,

@@ -2,8 +2,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import '../core/transformers/stream_transformers.dart';
 
-/// Screen providing a live comparative laboratory of Stream Operators:
-/// Raw Stream vs Debounce vs Throttle vs Distinct.
+/// Màn hình phòng thí nghiệm so sánh trực quan các Toán tử Stream:
+/// Luồng Gốc (Raw Stream) vs Debounce vs Throttle.
 class StreamOperatorsLabScreen extends StatefulWidget {
   const StreamOperatorsLabScreen({super.key});
 
@@ -14,15 +14,15 @@ class StreamOperatorsLabScreen extends StatefulWidget {
 class _StreamOperatorsLabScreenState extends State<StreamOperatorsLabScreen> {
   final TextEditingController _inputController = TextEditingController();
 
-  // Primary source stream controller
+  // StreamController phát nguồn dữ liệu chính
   final StreamController<String> _sourceController = StreamController<String>.broadcast();
 
-  // Subscriptions
+  // Các gói đăng ký lắng nghe (Subscriptions)
   StreamSubscription<String>? _rawSub;
   StreamSubscription<String>? _debounceSub;
   StreamSubscription<String>? _throttleSub;
 
-  // Trackers
+  // Bộ đếm số lượng sự kiện nhận được
   int _rawCount = 0;
   int _debounceCount = 0;
   int _throttleCount = 0;
@@ -35,7 +35,7 @@ class _StreamOperatorsLabScreenState extends State<StreamOperatorsLabScreen> {
   void initState() {
     super.initState();
 
-    // 1. Raw Stream (Direct listen, no operator)
+    // 1. Luồng Gốc (Raw Stream: lắng nghe trực tiếp, không lọc)
     _rawSub = _sourceController.stream.listen((val) {
       if (mounted) {
         setState(() {
@@ -45,7 +45,7 @@ class _StreamOperatorsLabScreenState extends State<StreamOperatorsLabScreen> {
       }
     });
 
-    // 2. Debounced Stream (Debounce 500ms)
+    // 2. Luồng áp dụng Debounce (Chờ 500ms sau khi ngừng nhập)
     _debounceSub = _sourceController.stream
         .debounce(const Duration(milliseconds: 500))
         .listen((val) {
@@ -57,7 +57,7 @@ class _StreamOperatorsLabScreenState extends State<StreamOperatorsLabScreen> {
       }
     });
 
-    // 3. Throttled Stream (Throttle 800ms)
+    // 3. Luồng áp dụng Throttle (Giới hạn tối đa 1 sự kiện mỗi 800ms)
     _throttleSub = _sourceController.stream
         .throttle(const Duration(milliseconds: 800))
         .listen((val) {

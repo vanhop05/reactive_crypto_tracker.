@@ -9,10 +9,10 @@ import '../models/market_tick.dart';
 /// Chế độ nguồn dữ liệu: Mô phỏng Brownian Motion hoặc Kết nối trực tiếp Binance WebSocket
 enum DataSourceMode { simulation, binanceLive }
 
-/// Central Reactive Service managing real-time price feeds via Dart Broadcast Streams.
-/// Implements safe stream lifecycle management, listener tracking, and multi-cast broadcasting.
+/// Dịch vụ Reactive Trung tâm: Quản lý luồng phát dữ liệu giá thời gian thực qua Dart Broadcast Streams.
+/// Hiện thực cơ chế quản lý vòng đời Stream an toàn, theo dõi số lượng người nghe và phát đa hướng (multi-cast).
 class CryptoPriceStreamService {
-  // Singleton pattern for centralized stream distribution
+  // Áp dụng mẫu thiết kế Singleton để phân phối luồng dữ liệu tập trung duy nhất trong toàn ứng dụng
   static final CryptoPriceStreamService _instance = CryptoPriceStreamService._internal();
   factory CryptoPriceStreamService() => _instance;
   static CryptoPriceStreamService get instance => _instance;
@@ -26,18 +26,18 @@ class CryptoPriceStreamService {
   final Random _random = Random();
   Timer? _tickTimer;
   
-  // Track active subscribers connected to the broadcast stream
+  // Theo dõi số lượng người đăng ký (subscriber) đang kết nối tới broadcast stream
   int _activeListenersCount = 0;
   int get activeListenersCount => _activeListenersCount;
 
-  // StreamController configured specifically as a BROADCAST stream
-  // Allowing multiple widgets (Home List, Header Banner, Coin Details) to listen concurrently.
+  // StreamController được cấu hình đặc biệt dưới dạng BROADCAST stream
+  // Cho phép nhiều Widget (Danh sách thị trường, Header, Chi tiết Coin) cùng lắng nghe đồng thời.
   late StreamController<MarketTick> _priceStreamController;
 
-  /// Stream of real-time ticks available to all components.
+  /// Luồng phát các bước giá thời gian thực (MarketTick) sẵn sàng cho tất cả các màn hình lắng nghe.
   Stream<MarketTick> get marketStream => _priceStreamController.stream;
 
-  /// Stream Controller to broadcast changes in subscriber count for UI monitoring
+  /// StreamController phát sự thay đổi về số lượng người nghe để phục vụ việc giám sát trên giao diện
   final StreamController<int> _listenerTrackerController = StreamController<int>.broadcast();
   Stream<int> get listenerCountStream => _listenerTrackerController.stream;
 
@@ -54,7 +54,7 @@ class CryptoPriceStreamService {
   String _binanceStatus = 'Mô phỏng nội bộ';
   String get binanceStatus => _binanceStatus;
 
-  // Internal assets repository
+  // Kho lưu trữ danh sách tài sản tiền mã hóa nội bộ
   final Map<String, CryptoAsset> _assetsMap = {};
   List<CryptoAsset> get currentAssets => _assetsMap.values.toList();
 
@@ -193,7 +193,7 @@ class CryptoPriceStreamService {
     }
   }
 
-  /// Starts the asynchronous ticker event simulation loop.
+  /// Khởi động vòng lặp bất đồng bộ mô phỏng các bước nhảy giá (Ticker Event Loop).
   void startSimulation() {
     if (_isRunning) return;
     _isRunning = true;
@@ -204,14 +204,14 @@ class CryptoPriceStreamService {
     });
   }
 
-  /// Pauses the live data stream generator.
+  /// Tạm dừng bộ sinh luồng dữ liệu mô phỏng.
   void pauseSimulation() {
     _isRunning = false;
     _tickTimer?.cancel();
     _tickTimer = null;
   }
 
-  /// Updates simulation frequency dynamically (e.g. from 500ms high-speed to 3000ms low-power).
+  /// Cập nhật tần số phát Stream động (ví dụ: từ 500ms tốc độ cao sang 3000ms tiết kiệm pin).
   void setTickInterval(int intervalMs) {
     _tickIntervalMs = intervalMs;
     if (_isRunning) {
@@ -220,7 +220,7 @@ class CryptoPriceStreamService {
     }
   }
 
-  /// Generates a realistic market tick using Brownian motion simulation.
+  /// Sinh một bước nhảy giá ngẫu nhiên thực tế sử dụng mô hình toán học Chuyển động Brown (Brownian Motion).
   void _generateRandomTick() {
     if (_priceStreamController.isClosed) return;
 
@@ -228,7 +228,7 @@ class CryptoPriceStreamService {
     final chosenSymbol = symbols[_random.nextInt(symbols.length)];
     final asset = _assetsMap[chosenSymbol]!;
 
-    // Volatility percentage (-1.2% to +1.2%)
+    // Biên độ biến động ngẫu nhiên (-1.2% đến +1.2%)
     final percentDelta = (_random.nextDouble() * 2.4 - 1.15) / 100.0;
     final priceDelta = asset.currentPrice * percentDelta;
     final newPrice = max(0.0001, asset.currentPrice + priceDelta);
@@ -244,22 +244,22 @@ class CryptoPriceStreamService {
       volume: (1000 + _random.nextDouble() * 50000),
     );
 
-    // Broadcast tick to all active stream listeners
+    // Bắn bước giá mới vào Stream cho tất cả các Listener đang lắng nghe
     _priceStreamController.add(tick);
   }
 
-  /// Obtains a filtered Stream specifically for a single cryptocurrency.
-  /// Uses Stream.where operator to transform the broadcast stream.
+  /// Lấy một luồng Stream đã được lọc riêng cho duy nhất 1 đồng tiền mã hóa.
+  /// Sử dụng toán tử Stream.where để biến đổi luồng phát đa hướng.
   Stream<MarketTick> getStreamForSymbol(String symbol) {
     return marketStream.where((tick) => tick.symbol.toUpperCase() == symbol.toUpperCase());
   }
 
-  /// Fetches an asset by its symbol.
+  /// Lấy thông tin một đồng tiền mã hóa theo mã ký hiệu (Symbol).
   CryptoAsset? getAsset(String symbol) {
     return _assetsMap[symbol.toUpperCase()];
   }
 
-  /// Connects to Binance live WebSocket stream (mini-ticker for all USDT pairs)
+  /// Mở kết nối WebSocket thời gian thực tới sàn Binance (kênh !miniTicker@arr cho toàn bộ cặp USDT)
   Future<void> connectToBinance() async {
     pauseSimulation();
     _currentMode = DataSourceMode.binanceLive;
@@ -278,24 +278,24 @@ class CryptoPriceStreamService {
           _handleBinanceData(rawData);
         },
         onError: (error) {
-          debugPrint('[BINANCE_WS] Error: $error');
+          debugPrint('[BINANCE_WS] Lỗi: $error');
           _binanceStatus = 'Lỗi kết nối - Chuyển sang mô phỏng';
           switchToSimulation();
         },
         onDone: () {
-          debugPrint('[BINANCE_WS] Disconnected');
+          debugPrint('[BINANCE_WS] Đã ngắt kết nối');
           if (_currentMode == DataSourceMode.binanceLive) {
             _binanceStatus = 'Đã ngắt kết nối';
           }
         },
       );
     } catch (e) {
-      debugPrint('[BINANCE_WS] Connection exception: $e');
+      debugPrint('[BINANCE_WS] Ngoại lệ kết nối: $e');
       switchToSimulation();
     }
   }
 
-  /// Parses and dispatches Binance mini-ticker ticks
+  /// Bóc tách dữ liệu JSON từ Binance và đẩy vào StreamController
   void _handleBinanceData(dynamic rawData) {
     if (_priceStreamController.isClosed) return;
     try {
@@ -305,7 +305,7 @@ class CryptoPriceStreamService {
           final symbolRaw = item['s'] as String?;
           if (symbolRaw == null || !symbolRaw.endsWith('USDT')) continue;
 
-          // Strip 'USDT' to get base symbol: 'BTCUSDT' -> 'BTC'
+          // Cắt bỏ đuôi 'USDT' để lấy mã ký hiệu gốc: 'BTCUSDT' -> 'BTC'
           final baseSymbol = symbolRaw.substring(0, symbolRaw.length - 4);
           final asset = _assetsMap[baseSymbol];
 
@@ -345,11 +345,11 @@ class CryptoPriceStreamService {
         }
       }
     } catch (e) {
-      debugPrint('[BINANCE_DATA_PARSE] Exception: $e');
+      debugPrint('[BINANCE_DATA_PARSE] Ngoại lệ: $e');
     }
   }
 
-  /// Switch back to local simulation
+  /// Chuyển về chế độ Mô Phỏng nội bộ
   void switchToSimulation() {
     _disconnectBinance();
     _currentMode = DataSourceMode.simulation;
@@ -365,7 +365,7 @@ class CryptoPriceStreamService {
     _binanceChannel = null;
   }
 
-  /// Toggle between Simulation and Live Binance WebSocket
+  /// Chuyển đổi qua lại giữa Mô Phỏng và Binance Live WebSocket
   Future<void> toggleDataSource() async {
     if (_currentMode == DataSourceMode.simulation) {
       await connectToBinance();
@@ -374,7 +374,7 @@ class CryptoPriceStreamService {
     }
   }
 
-  /// Safe dispose method to close all controllers and release timers.
+  /// Hàm hủy an toàn: đóng toàn bộ StreamController và giải phóng Timer
   Future<void> dispose() async {
     pauseSimulation();
     _disconnectBinance();

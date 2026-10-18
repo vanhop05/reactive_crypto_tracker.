@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 /// Chủ đề và bảng màu trên toàn ứng dụng được thiết kế riêng cho các chỉ số tài chính theo thời gian thực.
 class AppTheme {
-  // Brand colors
-  static const Color primaryGreen = Color(0xFF10B981); // Gain
-  static const Color primaryRed = Color(0xFFEF4444);   // Loss
+  // Màu sắc thương hiệu đặc trưng
+  static const Color primaryGreen = Color(0xFF10B981); // Tăng giá
+  static const Color primaryRed = Color(0xFFEF4444);   // Giảm giá
   static const Color accentCyan = Color(0xFF06B6D4);
   static const Color accentPurple = Color(0xFF8B5CF6);
   static const Color warningOrange = Color(0xFFF59E0B);

@@ -2,8 +2,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import '../models/event_loop_step.dart';
 
-/// Service demonstrating the Dart Event Loop, Microtask Queue, and Event Queue mechanics.
-/// Records exact order of execution and provides educational step logs.
+/// Dịch vụ mô phỏng cơ chế Event Loop, Hàng đợi Microtask (Microtask Queue) và Hàng đợi Sự kiện (Event Queue) trong Dart.
+/// Ghi lại chính xác thứ tự thực thi và cung cấp nhật ký từng bước cho mục đích trực quan hóa.
 class EventLoopSimulatorService {
   final StreamController<List<EventLoopStep>> _stepsController =
       StreamController<List<EventLoopStep>>.broadcast();
@@ -42,8 +42,8 @@ class EventLoopSimulatorService {
     _stepsController.add(List.unmodifiable(_recordedSteps));
   }
 
-  /// Runs the educational experiment proving Dart's execution priority:
-  /// Synchronous Code -> Microtask Queue -> Event Queue (Futures/Timers)
+  /// Chạy thí nghiệm chứng minh quy tắc thứ tự ưu tiên trong Dart:
+  /// Mã Đồng Bộ (Synchronous) -> Microtask Queue -> Event Queue (Future / Timer)
   Future<void> runExperiment() async {
     if (_isRunning) return;
     _isRunning = true;
@@ -52,7 +52,7 @@ class EventLoopSimulatorService {
     _stepsController.add([]);
     _stopwatch = Stopwatch()..start();
 
-    // 1. Synchronous Stack - Start
+    // 1. Ngăn xếp Đồng bộ (Synchronous Stack) - Bắt đầu
     _record(
       queueType: 'Synchronous Stack',
       label: 'Main Call Stack (Start)',
@@ -61,7 +61,7 @@ class EventLoopSimulatorService {
       icon: Icons.flash_on,
     );
 
-    // 2. Schedule Event Queue Future
+    // 2. Lên lịch tác vụ Future vào Event Queue
     Future(() {
       _record(
         queueType: 'Event Queue',
@@ -72,7 +72,7 @@ class EventLoopSimulatorService {
       );
     });
 
-    // 3. Schedule Delayed Event
+    // 3. Lên lịch tác vụ Timer có độ trễ vào Event Queue
     Future.delayed(const Duration(milliseconds: 30), () {
       _record(
         queueType: 'Event Queue (Timer)',
@@ -83,7 +83,7 @@ class EventLoopSimulatorService {
       );
     });
 
-    // 4. Schedule Microtask Queue 1
+    // 4. Lên lịch Microtask #1 vào Microtask Queue
     scheduleMicrotask(() {
       _record(
         queueType: 'Microtask Queue',
@@ -94,7 +94,7 @@ class EventLoopSimulatorService {
       );
     });
 
-    // 5. Schedule Microtask Queue 2 (Future.microtask)
+    // 5. Lên lịch Microtask #2 (Future.microtask)
     Future.microtask(() {
       _record(
         queueType: 'Microtask Queue',
@@ -105,7 +105,7 @@ class EventLoopSimulatorService {
       );
     });
 
-    // 6. Schedule Event Queue Future 2
+    // 6. Lên lịch Future #2 vào Event Queue
     Future(() {
       _record(
         queueType: 'Event Queue',
@@ -116,7 +116,7 @@ class EventLoopSimulatorService {
       );
     });
 
-    // 7. Synchronous Stack - End
+    // 7. Ngăn xếp Đồng bộ (Synchronous Stack) - Kết thúc
     _record(
       queueType: 'Synchronous Stack',
       label: 'Main Call Stack (End)',
@@ -125,13 +125,13 @@ class EventLoopSimulatorService {
       icon: Icons.check_circle_outline,
     );
 
-    // Wait until all async tasks settle
+    // Đợi cho đến khi tất cả các tác vụ bất đồng bộ hoàn thành
     await Future.delayed(const Duration(milliseconds: 60));
     _stopwatch?.stop();
     _isRunning = false;
   }
 
-  /// Clears previous experiment output
+  /// Xóa sạch kết quả thí nghiệm trước đó
   void clear() {
     _recordedSteps.clear();
     _stepsController.add([]);

@@ -5,10 +5,10 @@ import 'core/theme/app_theme.dart';
 import 'views/main_navigation_screen.dart';
 
 void main() {
-  // Ensure Flutter engine bindings are initialized
+  // Đảm bảo các kết nối của Flutter Engine được khởi tạo đầy đủ trước khi chạy app
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Configure system UI overlay style for dark fintech aesthetic
+  // Cấu hình thanh trạng thái hệ thống theo phong cách giao diện tài chính tối
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
@@ -18,15 +18,15 @@ void main() {
     ),
   );
 
-  // Demonstrate Event Loop startup logging
+  // Minh họa khởi tạo Microtask trong Event Loop khi ứng dụng vừa bật lên
   scheduleMicrotask(() {
-    debugPrint('[EVENT_LOOP] Microtask executed during application bootstrap.');
+    debugPrint('[EVENT_LOOP] Microtask được thực thi trong quá trình khởi động ứng dụng.');
   });
 
   runApp(const CryptoPulseApp());
 }
 
-/// Root widget of the CryptoPulse Reactive application.
+/// Widget gốc (Root Widget) của toàn bộ ứng dụng CryptoPulse Reactive.
 class CryptoPulseApp extends StatelessWidget {
   const CryptoPulseApp({super.key});
 
@@ -37,7 +37,7 @@ class CryptoPulseApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.dark, // Default to sleek dark theme
+      themeMode: ThemeMode.dark, // Mặc định sử dụng giao diện tối hiện đại
       home: const MainNavigationScreen(),
     );
   }

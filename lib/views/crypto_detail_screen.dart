@@ -11,11 +11,11 @@ import '../widgets/mini_price_chart.dart';
 import '../widgets/order_book_widget.dart';
 import '../widgets/stream_lifecycle_badge.dart';
 
-/// Screen displaying granular real-time information for a specific coin.
-/// Serves as the primary practical demonstration of:
-/// 1. Subscribing to a Broadcast Stream
-/// 2. Applying Stream Transformers (Throttle/Debounce)
-/// 3. Safely cancelling subscriptions on dispose() to avoid Memory Leaks.
+/// Màn hình hiển thị thông tin chi tiết thời gian thực của một đồng coin cụ thể.
+/// Đóng vai trò là ví dụ thực tiễn trọng tâm chứng minh:
+/// 1. Đăng ký lắng nghe Broadcast Stream đa hướng.
+/// 2. Ứng dụng các toán tử StreamTransformer (Throttle / Debounce).
+/// 3. Hủy đăng ký an toàn trong dispose() để chống thất thoát bộ nhớ (Memory Leak).
 class CryptoDetailScreen extends StatefulWidget {
   final CryptoAsset initialAsset;
 
@@ -28,7 +28,7 @@ class CryptoDetailScreen extends StatefulWidget {
 class _CryptoDetailScreenState extends State<CryptoDetailScreen> {
   late CryptoAsset _asset;
   
-  // Stream subscriptions that MUST be cleanly cancelled in dispose()
+  // Các luồng đăng ký (Stream Subscription) BẮT BUỘC phải được hủy sạch trong dispose()
   StreamSubscription<MarketTick>? _tickSubscription;
   StreamSubscription<int>? _activeListenerSubscription;
   
@@ -36,10 +36,10 @@ class _CryptoDetailScreenState extends State<CryptoDetailScreen> {
   StreamSubscription<List<OrderBookEntry>>? _orderBookSub;
   List<OrderBookEntry> _orderBookEntries = [];
 
-  // Tracking metrics for the Rubric Demonstration
+  // Các chỉ số theo dõi phục vụ cho việc thuyết trình và đánh giá
   int _receivedTicksCount = 0;
   int _activeSubscribersInApp = 0;
-  bool _simulateMemoryLeak = false; // Demonstration toggle
+  bool _simulateMemoryLeak = false; // Công tắc giả lập rò rỉ bộ nhớ khi demo
   DateTime? _lastTickTime;
 
   @override
@@ -52,7 +52,7 @@ class _CryptoDetailScreenState extends State<CryptoDetailScreen> {
       currentPrice: _asset.currentPrice,
     );
 
-    // 1. Subscribe to order book depth stream
+    // 1. Đăng ký lắng nghe luồng độ sâu sổ lệnh (Order Book Stream)
     _orderBookSub = _orderBookService.stream.listen((entries) {
       if (mounted) {
         setState(() {
@@ -61,7 +61,7 @@ class _CryptoDetailScreenState extends State<CryptoDetailScreen> {
       }
     });
 
-    // 2. Subscribe to the global listener tracker to observe stream lifecycle
+    // 2. Đăng ký lắng nghe bộ theo dõi số lượng listener để quan sát vòng đời Stream
     _activeSubscribersInApp = CryptoPriceStreamService.instance.activeListenersCount;
     _activeListenerSubscription =
         CryptoPriceStreamService.instance.listenerCountStream.listen((count) {
@@ -72,17 +72,17 @@ class _CryptoDetailScreenState extends State<CryptoDetailScreen> {
       }
     });
 
-    // 3. Connect to the symbol-specific Broadcast Stream with throttling
+    // 3. Kết nối tới Broadcast Stream lọc riêng cho đồng coin này có áp dụng Throttle
     _connectPriceStream();
   }
 
   void _connectPriceStream() {
     _tickSubscription?.cancel();
 
-    // Demonstrate listening to symbol-filtered broadcast stream
+    // Minh họa lắng nghe luồng broadcast đã lọc theo Symbol đồng coin
     _tickSubscription = CryptoPriceStreamService.instance
         .getStreamForSymbol(_asset.symbol)
-        .throttle(const Duration(milliseconds: 300)) // Throttle to prevent excessive UI rebuilds
+        .throttle(const Duration(milliseconds: 300)) // Throttle để ngăn ngừa việc render UI quá mức
         .listen(
       (tick) {
         if (!mounted) return;
@@ -93,24 +93,24 @@ class _CryptoDetailScreenState extends State<CryptoDetailScreen> {
         });
       },
       onError: (Object error) {
-        debugPrint('Stream error encountered: $error');
+        debugPrint('Gặp lỗi stream: $error');
       },
       onDone: () {
-        debugPrint('Price stream closed for ${_asset.symbol}');
+        debugPrint('Luồng giá kết thúc cho ${_asset.symbol}');
       },
       cancelOnError: false,
     );
   }
 
-  /// CRITICAL: Flutter Lifecycle dispose method.
-  /// Safely cancels stream subscriptions when user navigates away (pops the screen).
+  /// QUAN TRỌNG: Phương thức vòng đời dispose() của Flutter.
+  /// Hủy các luồng Stream an toàn khi người dùng thoát màn hình (tránh Memory Leak).
   @override
   void dispose() {
     if (_simulateMemoryLeak) {
-      // Intentionally leak for demonstration if toggle was activated
-      debugPrint('[WARNING] Giả lập rò rỉ: StreamSubscription KHÔNG được hủy!');
+      // Cố tình gây rò rỉ để minh họa nếu công tắc được bật
+      debugPrint('[CẢNH BÁO] Giả lập rò rỉ: StreamSubscription KHÔNG được hủy!');
     } else {
-      // Proper safe stream disposal
+      // Cơ chế giải phóng luồng an toàn chuẩn kỹ thuật
       _tickSubscription?.cancel();
       _tickSubscription = null;
       _activeListenerSubscription?.cancel();
@@ -118,7 +118,7 @@ class _CryptoDetailScreenState extends State<CryptoDetailScreen> {
       _orderBookSub?.cancel();
       _orderBookSub = null;
       _orderBookService.dispose();
-      debugPrint('[SAFE DISPOSE] Đã hủy toàn bộ StreamSubscription thành công!');
+      debugPrint('[HỦY AN TOÀN] Đã hủy toàn bộ StreamSubscription thành công!');
     }
 
     super.dispose();
