@@ -228,7 +228,7 @@ git push -u origin main
 
 ---
 <a id="kiem-thu-tu-dong"></a>
-##  KIỂM THỬ TỰ ĐỘNG (UNIT TESTING)
+##  KIỂM THỬ TỰ ĐỘNG 
 
 Dự án đi kèm các bộ kiểm thử tự động xác thực toàn diện:
 1. `test/stream_transformers_test.dart`: Kiểm tra toán tử Debounce và Throttle.
@@ -243,7 +243,7 @@ dart run test/verify_pure_dart.dart
 Kết quả hiển thị trên console:
 ```text
 =============================================
- CHẠY KIỂM THỬ TỰ ĐỘNG  (DART TEST)
+ CHẠY KIỂM THỬ TỰ ĐỘNG  
 =============================================
 [Test 1] Kiểm tra thứ tự Event Loop & Microtask Queue:
   -> PASS: Thứ tự ưu tiên chính xác tuyệt đối: Sync -> Microtasks -> Future.
