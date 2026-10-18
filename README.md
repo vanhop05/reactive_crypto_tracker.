@@ -147,7 +147,11 @@ APP_ENVIRONMENT=development
 ## HƯỚNG DẪN CÀI ĐẶT & CHẠY ỨNG DỤNG
 
 Dự án tương thích hoàn toàn với Flutter 3.10+ và Dart 3.0+.
-
+### Bước 1: Tải dự án về máy 
+Tạo thư mục đích trên máy, sau đó tải dự án về máy:
+```bash
+git clone "https://github.com/vanhop05/reactive_crypto_tracker." tenthumuc
+```
 ### Bước 1: Tải các gói phụ thuộc (Dependencies)
 Mở terminal tại thư mục gốc của dự án (`reactive_crypto_tracker`):
 ```bash
