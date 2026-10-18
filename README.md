@@ -1,15 +1,11 @@
-# CryptoPulse Reactive — Ứng Dụng Đa Nền Tảng Theo Dõi Thị Trường Thời Gian Thực
-
-> **Môn học:** Lập Trình Đa Nền Tảng  
+# CryptoPulse Reactive — Ứng Dụng Đa Nền Tảng Theo Dõi Thị Trường Thời Gian Thực 
 > **Chủ đề 02:** Lập trình Bất đồng bộ với Future & Stream: Xây dựng Module Reactive thời gian thực  
 > **Nền tảng mục tiêu:** Đa nền tảng (Hỗ trợ chính thức: **Android**, **iOS**, **Web**, **Windows Desktop**)  
 > **Ngôn ngữ:** Dart 3.x & Flutter Framework  
-> **Quy mô:** Nhóm 02 sinh viên  
-> 
-> **THÀNH VIÊN THỰC HIỆN:**
+> **THÀNH VIÊN Nhóm:**
 > 1. **Trần Văn Hợp** (Trưởng nhóm - Business Logic, State Management, Event Loop Engine, Unit Testing)
-> 2. **Mai Tuấn An** (Thành viên - UI/UX Design, Data Visualization, Multiplatform Native, Báo cáo & Video)
-
+> 2. **Mai Tuấn An** (Thành viên - UI/UX Design, Data Visualization, Multiplatform Native, Báo cáo slide
+)
 ---
 
 ## MỤC LỤC
@@ -20,12 +16,12 @@
 5. [Hướng Dẫn Cài Đặt & Chạy Ứng Dụng (Android, iOS, Web)](#huong-dan-cai-dat)
 6. [Bảng Phân Chia Công Việc & Kịch Bản Commit Git](#phan-chia-cong-viec)
 7. [Kịch Bản Quay Video Clip Thao Tác Thực Tế & Thuyết Trình](#kich-ban-video)
-8. [Kiểm Thử Tự Động (Unit Testing)](#kiem-thu-tu-dong)
+8. [Kiểm Thử Tự Động (#kiem-thu-tu-dong)
 
 ---
 
 <a id="gioi-thieu-du-an"></a>
-## GIỚI THIỆU DỰ ÁN
+## GIỚI THIỆU DỰ ÁNq
 
 **CryptoPulse Reactive** là ứng dụng di động đa nền tảng được xây dựng nhằm giải quyết bài toán xử lý và hiển thị luồng dữ liệu biến động cực nhanh trong thời gian thực (real-time high-frequency streaming) mà không làm lag giao diện người dùng, đồng thời quản lý bộ nhớ an toàn tuyệt đối.
 
