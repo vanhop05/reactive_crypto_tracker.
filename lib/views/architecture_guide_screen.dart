@@ -13,6 +13,49 @@ class ArchitectureGuideScreen extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
+          Container(
+            padding: const EdgeInsets.all(16),
+            margin: const EdgeInsets.only(bottom: 14),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [Color(0xFF0F172A), Color(0xFF1E293B)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: const Color(0xFF0284C7).withOpacity(0.5)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Row(
+                  children: [
+                    Icon(Icons.school, color: Color(0xFF0284C7), size: 22),
+                    SizedBox(width: 8),
+                    Text(
+                      'BÁO CÁO ĐỒ ÁN MÔN HỌC',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF0284C7),
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  'Chủ đề 02: Lập trình Bất đồng bộ với Future & Stream: Xây dựng Module Reactive thời gian thực',
+                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.white),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  'Nhóm sinh viên thực hiện: Trần Văn Hợp & Mai Tuấn An',
+                  style: TextStyle(fontSize: 12, color: Colors.grey[300]),
+                ),
+              ],
+            ),
+          ),
           _buildCard(
             context,
             title: '1. Event Loop & Microtask Queue',

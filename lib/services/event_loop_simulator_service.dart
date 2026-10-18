@@ -42,8 +42,10 @@ class EventLoopSimulatorService {
     _stepsController.add(List.unmodifiable(_recordedSteps));
   }
 
-  /// Chạy thí nghiệm chứng minh quy tắc thứ tự ưu tiên trong Dart:
-  /// Mã Đồng Bộ (Synchronous) -> Microtask Queue -> Event Queue (Future / Timer)
+  // =========================================================================
+  // [YÊU CẦU 1]: EVENT LOOP & MICROTASK QUEUE - THỰC NGHIỆM THỨ TỰ ƯU TIÊN
+  // Quy tắc vàng: Mã Đồng Bộ -> Microtask Queue -> Event Queue (Future / Timer)
+  // =========================================================================
   Future<void> runExperiment() async {
     if (_isRunning) return;
     _isRunning = true;

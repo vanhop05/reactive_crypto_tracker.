@@ -11,11 +11,10 @@ import '../widgets/mini_price_chart.dart';
 import '../widgets/order_book_widget.dart';
 import '../widgets/stream_lifecycle_badge.dart';
 
-/// Màn hình hiển thị thông tin chi tiết thời gian thực của một đồng coin cụ thể.
-/// Đóng vai trò là ví dụ thực tiễn trọng tâm chứng minh:
-/// 1. Đăng ký lắng nghe Broadcast Stream đa hướng.
-/// 2. Ứng dụng các toán tử StreamTransformer (Throttle / Debounce).
-/// 3. Hủy đăng ký an toàn trong dispose() để chống thất thoát bộ nhớ (Memory Leak).
+/// Màn hình Chi Tiết Coin: Minh chứng thực tế cho 3 yêu cầu cốt lõi:
+/// 1. [YÊU CẦU 4]: Lắng nghe luồng Broadcast Stream đa hướng (cùng lúc với Trang chủ).
+/// 2. [YÊU CẦU 5]: Áp dụng toán tử Throttle (300ms) để tiết lưu sự kiện, chống quá tải UI.
+/// 3. [QUẢN LÝ VÒNG ĐỜI]: Hủy đăng ký an toàn trong dispose() để chống thất thoát bộ nhớ (Memory Leak).
 class CryptoDetailScreen extends StatefulWidget {
   final CryptoAsset initialAsset;
 
@@ -27,19 +26,18 @@ class CryptoDetailScreen extends StatefulWidget {
 
 class _CryptoDetailScreenState extends State<CryptoDetailScreen> {
   late CryptoAsset _asset;
-  
-  // Các luồng đăng ký (Stream Subscription) BẮT BUỘC phải được hủy sạch trong dispose()
+
+  // Luồng đăng ký giá (Bắt buộc phải hủy trong dispose)
   StreamSubscription<MarketTick>? _tickSubscription;
   StreamSubscription<int>? _activeListenerSubscription;
-  
+
+  // Sổ lệnh mua/bán thời gian thực
   late OrderBookStreamService _orderBookService;
   StreamSubscription<List<OrderBookEntry>>? _orderBookSub;
   List<OrderBookEntry> _orderBookEntries = [];
 
-  // Các chỉ số theo dõi phục vụ cho việc thuyết trình và đánh giá
   int _receivedTicksCount = 0;
   int _activeSubscribersInApp = 0;
-  bool _simulateMemoryLeak = false; // Công tắc giả lập rò rỉ bộ nhớ khi demo
   DateTime? _lastTickTime;
 
   @override
@@ -47,12 +45,13 @@ class _CryptoDetailScreenState extends State<CryptoDetailScreen> {
     super.initState();
     _asset = widget.initialAsset;
 
+    // Khởi tạo dịch vụ sổ lệnh cho đồng coin này
     _orderBookService = OrderBookStreamService(
       symbol: _asset.symbol,
       currentPrice: _asset.currentPrice,
     );
 
-    // 1. Đăng ký lắng nghe luồng độ sâu sổ lệnh (Order Book Stream)
+    // Lắng nghe luồng sổ lệnh
     _orderBookSub = _orderBookService.stream.listen((entries) {
       if (mounted) {
         setState(() {
@@ -61,7 +60,7 @@ class _CryptoDetailScreenState extends State<CryptoDetailScreen> {
       }
     });
 
-    // 2. Đăng ký lắng nghe bộ theo dõi số lượng listener để quan sát vòng đời Stream
+    // Lắng nghe số lượng subscriber đang kết nối tới Broadcast Stream
     _activeSubscribersInApp = CryptoPriceStreamService.instance.activeListenersCount;
     _activeListenerSubscription =
         CryptoPriceStreamService.instance.listenerCountStream.listen((count) {
@@ -72,17 +71,17 @@ class _CryptoDetailScreenState extends State<CryptoDetailScreen> {
       }
     });
 
-    // 3. Kết nối tới Broadcast Stream lọc riêng cho đồng coin này có áp dụng Throttle
+    // Lắng nghe luồng giá có áp dụng toán tử Throttle
     _connectPriceStream();
   }
 
+  /// [YÊU CẦU 4 & 5]: Lắng nghe Broadcast Stream và áp dụng toán tử Throttle 300ms
   void _connectPriceStream() {
     _tickSubscription?.cancel();
 
-    // Minh họa lắng nghe luồng broadcast đã lọc theo Symbol đồng coin
     _tickSubscription = CryptoPriceStreamService.instance
         .getStreamForSymbol(_asset.symbol)
-        .throttle(const Duration(milliseconds: 300)) // Throttle để ngăn ngừa việc render UI quá mức
+        .throttle(const Duration(milliseconds: 300)) // Tiết lưu: tối đa 1 lần render mỗi 300ms
         .listen(
       (tick) {
         if (!mounted) return;
@@ -92,35 +91,25 @@ class _CryptoDetailScreenState extends State<CryptoDetailScreen> {
           _asset.applyTick(tick.price);
         });
       },
-      onError: (Object error) {
-        debugPrint('Gặp lỗi stream: $error');
+      onError: (error) {
+        debugPrint('[STREAM_ERROR] Lỗi khi nhận dữ liệu: $error');
       },
-      onDone: () {
-        debugPrint('Luồng giá kết thúc cho ${_asset.symbol}');
-      },
-      cancelOnError: false,
     );
   }
 
-  /// QUAN TRỌNG: Phương thức vòng đời dispose() của Flutter.
-  /// Hủy các luồng Stream an toàn khi người dùng thoát màn hình (tránh Memory Leak).
+  /// [QUAN TRỌNG NHẤT]: Hủy toàn bộ StreamSubscription khi người dùng bấm Back
+  /// Giúp giải phóng tài nguyên và chống tràn bộ nhớ (Memory Leak)
   @override
   void dispose() {
-    if (_simulateMemoryLeak) {
-      // Cố tình gây rò rỉ để minh họa nếu công tắc được bật
-      debugPrint('[CẢNH BÁO] Giả lập rò rỉ: StreamSubscription KHÔNG được hủy!');
-    } else {
-      // Cơ chế giải phóng luồng an toàn chuẩn kỹ thuật
-      _tickSubscription?.cancel();
-      _tickSubscription = null;
-      _activeListenerSubscription?.cancel();
-      _activeListenerSubscription = null;
-      _orderBookSub?.cancel();
-      _orderBookSub = null;
-      _orderBookService.dispose();
-      debugPrint('[HỦY AN TOÀN] Đã hủy toàn bộ StreamSubscription thành công!');
-    }
+    _tickSubscription?.cancel();
+    _tickSubscription = null;
+    _activeListenerSubscription?.cancel();
+    _activeListenerSubscription = null;
+    _orderBookSub?.cancel();
+    _orderBookSub = null;
+    _orderBookService.dispose();
 
+    debugPrint('[DISPOSE_AN_TOAN] Đã giải phóng toàn bộ Stream cho ${_asset.symbol}');
     super.dispose();
   }
 
@@ -137,13 +126,13 @@ class _CryptoDetailScreenState extends State<CryptoDetailScreen> {
         title: Text('${_asset.name} (${_asset.symbol})'),
         actions: [
           IconButton(
-            tooltip: 'Làm mới stream',
+            tooltip: 'Kết nối lại luồng',
             icon: const Icon(Icons.refresh),
             onPressed: () {
               _connectPriceStream();
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
-                  content: Text('Đã tái thiết lập kết nối Stream!'),
+                  content: Text('Đã làm mới kết nối Stream!'),
                   duration: Duration(seconds: 1),
                 ),
               );
@@ -156,7 +145,7 @@ class _CryptoDetailScreenState extends State<CryptoDetailScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Stream Safety Banner & Monitor
+            // Thẻ giám sát vòng đời Stream & Đếm số lượng Listener
             Container(
               margin: const EdgeInsets.all(16),
               padding: const EdgeInsets.all(14),
@@ -164,10 +153,8 @@ class _CryptoDetailScreenState extends State<CryptoDetailScreen> {
                 color: const Color(0xFF161B26),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: _simulateMemoryLeak
-                      ? const Color(0xFFEF4444)
-                      : const Color(0xFF10B981).withOpacity(0.5),
-                  width: 1.5,
+                  color: const Color(0xFF10B981).withOpacity(0.5),
+                  width: 1.2,
                 ),
               ),
               child: Column(
@@ -176,43 +163,28 @@ class _CryptoDetailScreenState extends State<CryptoDetailScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
+                      const Row(
                         children: [
-                          Icon(
-                            _simulateMemoryLeak ? Icons.warning_amber : Icons.security,
-                            color: _simulateMemoryLeak
-                                ? const Color(0xFFEF4444)
-                                : const Color(0xFF10B981),
-                            size: 20,
-                          ),
-                          const SizedBox(width: 8),
-                          const Text(
+                          Icon(Icons.shield_outlined, color: Color(0xFF10B981), size: 20),
+                          SizedBox(width: 8),
+                          Text(
                             'Giám Sát Vòng Đời Luồng (Stream Lifecycle)',
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
                           ),
                         ],
                       ),
                       StreamLifecycleBadge(
                         activeListeners: _activeSubscribersInApp,
-                        label: 'Total Subs',
+                        label: 'Active Subs',
                       ),
                     ],
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 8),
                   Text(
-                    _simulateMemoryLeak
-                        ? 'CẢNH BÁO: Chế độ giả lập rò rỉ bộ nhớ đang BẬT. Khi bạn Back ra màn hình trước, StreamSubscription sẽ KHÔNG được hủy để kiểm tra cảnh báo!'
-                        : 'AN TOÀN: Cơ chế dispose() sẽ tự động gọi _tickSubscription.cancel() khi thoát màn hình để ngăn chặn Memory Leak.',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: _simulateMemoryLeak ? const Color(0xFFFCA5A5) : Colors.grey[300],
-                      height: 1.4,
-                    ),
+                    'An toàn bộ nhớ: StreamSubscription được quản lý chặt chẽ và tự động hủy hoàn toàn trong dispose() khi bạn thoát màn hình này.',
+                    style: TextStyle(fontSize: 12, color: Colors.grey[300], height: 1.4),
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -225,14 +197,20 @@ class _CryptoDetailScreenState extends State<CryptoDetailScreen> {
                           fontFamily: 'monospace',
                         ),
                       ),
-                      Switch(
-                        value: _simulateMemoryLeak,
-                        activeColor: const Color(0xFFEF4444),
-                        onChanged: (val) {
-                          setState(() {
-                            _simulateMemoryLeak = val;
-                          });
-                        },
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF8B5CF6).withOpacity(0.15),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: const Text(
+                          'Throttle 300ms Kích Hoạt',
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: Color(0xFF8B5CF6),
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -240,7 +218,7 @@ class _CryptoDetailScreenState extends State<CryptoDetailScreen> {
               ),
             ),
 
-            // Price Header Card
+            // Thẻ thông tin giá lớn & Biểu đồ Sparkline
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 16),
               padding: const EdgeInsets.all(20),
@@ -310,7 +288,8 @@ class _CryptoDetailScreenState extends State<CryptoDetailScreen> {
                     ],
                   ),
                   const SizedBox(height: 20),
-                  // Real-time Chart
+
+                  // Biểu đồ giá thời gian thực
                   SizedBox(
                     height: 140,
                     width: double.infinity,
@@ -327,7 +306,7 @@ class _CryptoDetailScreenState extends State<CryptoDetailScreen> {
 
             const SizedBox(height: 16),
 
-            // 24h Statistics Grid
+            // Lưới 4 chỉ số thống kê 24h
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
@@ -382,7 +361,7 @@ class _CryptoDetailScreenState extends State<CryptoDetailScreen> {
 
             const SizedBox(height: 16),
 
-            // Order Book Widget
+            // Sổ lệnh mua bán (Order Book)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: OrderBookWidget(entries: _orderBookEntries),

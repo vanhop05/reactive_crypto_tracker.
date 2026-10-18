@@ -64,6 +64,11 @@ class CryptoPriceStreamService {
   int _tickIntervalMs = 1200;
   int get tickIntervalMs => _tickIntervalMs;
 
+  // =========================================================================
+  // [YÊU CẦU 3 & 4]: KHỞI TẠO STREAMCONTROLLER DƯỚI DẠNG BROADCAST (PHÁT ĐA HƯỚNG)
+  // - Broadcast Stream cho phép nhiều Widget (Trang chủ, Chi tiết coin, Header) cùng nghe.
+  // - onListen & onCancel: Tự động đếm số lượng người nghe để quản lý vòng đời và tránh rò rỉ bộ nhớ.
+  // =========================================================================
   void _initBroadcastController() {
     _priceStreamController = StreamController<MarketTick>.broadcast(
       onListen: () {
@@ -248,8 +253,10 @@ class CryptoPriceStreamService {
     _priceStreamController.add(tick);
   }
 
-  /// Lấy một luồng Stream đã được lọc riêng cho duy nhất 1 đồng tiền mã hóa.
-  /// Sử dụng toán tử Stream.where để biến đổi luồng phát đa hướng.
+  // =========================================================================
+  // [YÊU CẦU 5]: TOÁN TỬ BIẾN ĐỔI WHERE (LỌC DỮ LIỆU)
+  // Lấy ra luồng Stream chỉ chứa duy nhất đồng coin được yêu cầu (ví dụ: BTC, ETH)
+  // =========================================================================
   Stream<MarketTick> getStreamForSymbol(String symbol) {
     return marketStream.where((tick) => tick.symbol.toUpperCase() == symbol.toUpperCase());
   }
@@ -259,7 +266,10 @@ class CryptoPriceStreamService {
     return _assetsMap[symbol.toUpperCase()];
   }
 
-  /// Mở kết nối WebSocket thời gian thực tới sàn Binance (kênh !miniTicker@arr cho toàn bộ cặp USDT)
+  // =========================================================================
+  // [YÊU CẦU 2]: FUTURE & ASYNC / AWAIT (TÁC VỤ BẤT ĐỒNG BỘ 1 LẦN)
+  // Mở kết nối WebSocket thời gian thực tới sàn Binance thế giới
+  // =========================================================================
   Future<void> connectToBinance() async {
     pauseSimulation();
     _currentMode = DataSourceMode.binanceLive;
@@ -374,7 +384,10 @@ class CryptoPriceStreamService {
     }
   }
 
-  /// Hàm hủy an toàn: đóng toàn bộ StreamController và giải phóng Timer
+  // =========================================================================
+  // [QUẢN LÝ VÒNG ĐỜI]: HÀM DISPOSE ĐÓNG LUỒNG AN TOÀN
+  // Ngăn chặn rò rỉ bộ nhớ (Memory Leak) bằng cách đóng tất cả StreamController
+  // =========================================================================
   Future<void> dispose() async {
     pauseSimulation();
     _disconnectBinance();

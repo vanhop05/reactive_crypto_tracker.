@@ -1,10 +1,12 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../models/crypto_asset.dart';
 import '../models/market_tick.dart';
 import 'mini_price_chart.dart';
 
-/// Thẻ hiển thị thông tin cryptocurrency theo thời gian thực, kèm hiệu ứng pulse mỗi khi dữ liệu thay đổi.
+/// Thẻ hiển thị một đồng coin trong danh sách thị trường.
+/// Tự động nhấp nháy màu xanh (khi tăng giá) hoặc màu đỏ (khi giảm giá) mỗi khi nhận được bước giá mới từ Stream.
 class PriceTickerCard extends StatefulWidget {
   final CryptoAsset asset;
   final MarketTick? latestTick;
@@ -21,60 +23,52 @@ class PriceTickerCard extends StatefulWidget {
   State<PriceTickerCard> createState() => _PriceTickerCardState();
 }
 
-class _PriceTickerCardState extends State<PriceTickerCard>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _flashController;
-  late Animation<Color?> _flashColorAnimation;
+class _PriceTickerCardState extends State<PriceTickerCard> {
+  Color _flashColor = Colors.transparent;
   double _lastSeenPrice = 0.0;
+  Timer? _resetFlashTimer;
 
-// Trạng thái trước khi cập nhật 
   @override
   void initState() {
     super.initState();
     _lastSeenPrice = widget.asset.currentPrice;
-
-    _flashController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 600),
-    );
-
-    _flashColorAnimation = ColorTween(
-      begin: Colors.transparent,
-      end: Colors.transparent,
-    ).animate(_flashController);
   }
-  // Hiệu ứng khi giá thay đổi
+
+  /// Khi Widget cha truyền dữ liệu tick mới từ StreamBuilder xuống
   @override
   void didUpdateWidget(covariant PriceTickerCard oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.latestTick != null &&
-        widget.latestTick!.symbol == widget.asset.symbol &&
-        widget.latestTick!.price != _lastSeenPrice) {
-      final isUp = widget.latestTick!.price > _lastSeenPrice;
-      _lastSeenPrice = widget.latestTick!.price;
 
-      final highlightColor = isUp
-          ? const Color(0xFF10B981).withOpacity(0.25)
-          : const Color(0xFFEF4444).withOpacity(0.25);
+    final tick = widget.latestTick;
+    if (tick != null && tick.symbol == widget.asset.symbol && tick.price != _lastSeenPrice) {
+      final isUp = tick.price > _lastSeenPrice;
+      _lastSeenPrice = tick.price;
 
-      _flashColorAnimation = ColorTween(
-        begin: highlightColor,
-        end: Colors.transparent,
-      ).animate(CurvedAnimation(
-        parent: _flashController,
-        curve: Curves.easeOutQuad,
-      ));
+      // Đổi màu viền/nền thẻ để tạo hiệu ứng nhấp nháy trực quan
+      setState(() {
+        _flashColor = isUp
+            ? const Color(0xFF10B981).withOpacity(0.25) // Màu xanh tăng giá
+            : const Color(0xFFEF4444).withOpacity(0.25); // Màu đỏ giảm giá
+      });
 
-      _flashController.forward(from: 0.0);
+      // Tự động trả về màu trong suốt sau 350ms
+      _resetFlashTimer?.cancel();
+      _resetFlashTimer = Timer(const Duration(milliseconds: 350), () {
+        if (mounted) {
+          setState(() {
+            _flashColor = Colors.transparent;
+          });
+        }
+      });
     }
   }
-  // Giải phóng bộ nhớ
+
   @override
   void dispose() {
-    _flashController.dispose();
+    _resetFlashTimer?.cancel();
     super.dispose();
   }
-  // Giao diện thẻ thông tin crypto
+
   @override
   Widget build(BuildContext context) {
     final currencyFormatter = NumberFormat.currency(
@@ -84,33 +78,21 @@ class _PriceTickerCardState extends State<PriceTickerCard>
 
     final isPositive = widget.asset.isPositive;
     final changePrefix = isPositive ? '+' : '';
+    final hasFlash = _flashColor != Colors.transparent;
 
-    return AnimatedBuilder(
-      animation: _flashController,
-      builder: (context, child) {
-        return Container(
-          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-          decoration: BoxDecoration(
-            color: _flashColorAnimation.value != Colors.transparent
-                ? Color.alphaBlend(
-                    _flashColorAnimation.value ?? Colors.transparent,
-                    Theme.of(context).cardTheme.color ?? const Color(0xFF151B26),
-                  )
-                : Theme.of(context).cardTheme.color,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: _flashColorAnimation.value != null &&
-                      _flashColorAnimation.value != Colors.transparent
-                  ? (isPositive
-                      ? const Color(0xFF10B981).withOpacity(0.6)
-                      : const Color(0xFFEF4444).withOpacity(0.6))
-                  : Colors.white.withOpacity(0.06),
-              width: 1.2,
-            ),
-          ),
-          child: child,
-        );
-      },
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 250),
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+      decoration: BoxDecoration(
+        color: hasFlash ? _flashColor : Theme.of(context).cardTheme.color,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: hasFlash
+              ? (isPositive ? const Color(0xFF10B981) : const Color(0xFFEF4444))
+              : Colors.white.withOpacity(0.06),
+          width: hasFlash ? 1.5 : 1.0,
+        ),
+      ),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
@@ -120,7 +102,7 @@ class _PriceTickerCardState extends State<PriceTickerCard>
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
             child: Row(
               children: [
-                // Icon / Symbol Badge
+                // Khung hiển thị ký hiệu đồng coin
                 Container(
                   width: 44,
                   height: 44,
@@ -141,7 +123,8 @@ class _PriceTickerCardState extends State<PriceTickerCard>
                   ),
                 ),
                 const SizedBox(width: 12),
-                // Name & Symbol
+
+                // Tên và phân loại coin
                 Expanded(
                   flex: 3,
                   child: Column(
@@ -187,7 +170,8 @@ class _PriceTickerCardState extends State<PriceTickerCard>
                     ],
                   ),
                 ),
-                // Mini Sparkline
+
+                // Biểu đồ đường mini (Sparkline)
                 Expanded(
                   flex: 3,
                   child: Center(
@@ -199,7 +183,8 @@ class _PriceTickerCardState extends State<PriceTickerCard>
                     ),
                   ),
                 ),
-                // Price & Percentage
+
+                // Giá và phần trăm thay đổi
                 Expanded(
                   flex: 3,
                   child: Column(

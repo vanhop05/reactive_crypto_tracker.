@@ -1,7 +1,9 @@
 import 'dart:async';
 
-/// Bộ chuyển đổi luồng (Stream Transformer) tùy chỉnh triển khai mô hình Debounce
-/// Bỏ các giá trị cũ và phát giá trị mới sau [duration]
+// =========================================================================
+// [YÊU CẦU 5]: TOÁN TỬ BIẾN ĐỔI LUỒNG TÙY CHỈNH (STREAM TRANSFORMER)
+// 1. Debounce: Bỏ qua các sự kiện liên tục, chỉ phát sự kiện cuối sau khoảng thời gian yên lặng.
+// =========================================================================
 class DebounceStreamTransformer<T> extends StreamTransformerBase<T, T> {
   final Duration duration;
 
@@ -60,8 +62,10 @@ class DebounceStreamTransformer<T> extends StreamTransformerBase<T, T> {
   }
 }
 
-/// Bộ chuyển đổi luồng (Stream Transformer) tùy chỉnh triển khai mô hình Throttle
-/// Phát sự kiện đầu tiên, sau đó tạm thời ngăn chặn các sự kiện khác trong [duration]
+// =========================================================================
+// [YÊU CẦU 5]: TOÁN TỬ THROTTLE STREAM TRANSFORMER
+// 2. Throttle: Phát ngay sự kiện đầu tiên, sau đó chặn mọi sự kiện trong [duration]
+// =========================================================================
 class ThrottleStreamTransformer<T> extends StreamTransformerBase<T, T> {
   final Duration duration;
 
