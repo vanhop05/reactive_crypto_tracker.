@@ -15,7 +15,7 @@
 4. [Cấu Hình Biến Môi Trường (.env) & Google Services](#cau-hinh-bien-moi-truong)
 5. [Hướng Dẫn Cài Đặt & Chạy Ứng Dụng (Android, iOS, Web)](#huong-dan-cai-dat)
 6. [Bảng Phân Chia Công Việc & Kịch Bản Commit Git](#phan-chia-cong-viec)
-7. [Kiểm Thử Tự Động]  (#kiem-thu-tu-dong)
+7. [Kiểm Thử Tự Động](#kiem-thu-tu-dong)
 
 ---
 
