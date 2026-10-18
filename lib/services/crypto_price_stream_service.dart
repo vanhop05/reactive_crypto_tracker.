@@ -1,7 +1,13 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
+import 'package:flutter/foundation.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 import '../models/crypto_asset.dart';
 import '../models/market_tick.dart';
+
+/// Chế độ nguồn dữ liệu: Mô phỏng Brownian Motion hoặc Kết nối trực tiếp Binance WebSocket
+enum DataSourceMode { simulation, binanceLive }
 
 /// Central Reactive Service managing real-time price feeds via Dart Broadcast Streams.
 /// Implements safe stream lifecycle management, listener tracking, and multi-cast broadcasting.
@@ -34,6 +40,19 @@ class CryptoPriceStreamService {
   /// Stream Controller to broadcast changes in subscriber count for UI monitoring
   final StreamController<int> _listenerTrackerController = StreamController<int>.broadcast();
   Stream<int> get listenerCountStream => _listenerTrackerController.stream;
+
+  // Mode Controller: Phát thông báo khi chuyển đổi giữa Mô phỏng và Binance Live
+  DataSourceMode _currentMode = DataSourceMode.simulation;
+  DataSourceMode get currentMode => _currentMode;
+  bool get isBinanceLive => _currentMode == DataSourceMode.binanceLive;
+
+  final StreamController<DataSourceMode> _modeController = StreamController<DataSourceMode>.broadcast();
+  Stream<DataSourceMode> get modeStream => _modeController.stream;
+
+  WebSocketChannel? _binanceChannel;
+  StreamSubscription? _binanceSubscription;
+  String _binanceStatus = 'Mô phỏng nội bộ';
+  String get binanceStatus => _binanceStatus;
 
   // Internal assets repository
   final Map<String, CryptoAsset> _assetsMap = {};
@@ -240,14 +259,133 @@ class CryptoPriceStreamService {
     return _assetsMap[symbol.toUpperCase()];
   }
 
+  /// Connects to Binance live WebSocket stream (mini-ticker for all USDT pairs)
+  Future<void> connectToBinance() async {
+    pauseSimulation();
+    _currentMode = DataSourceMode.binanceLive;
+    _modeController.add(_currentMode);
+    _binanceStatus = 'Đang kết nối...';
+
+    _disconnectBinance();
+
+    try {
+      final wsUrl = Uri.parse('wss://stream.binance.com:9443/ws/!miniTicker@arr');
+      _binanceChannel = WebSocketChannel.connect(wsUrl);
+      _binanceStatus = 'Đang trực tiếp (wss://stream.binance.com)';
+
+      _binanceSubscription = _binanceChannel!.stream.listen(
+        (dynamic rawData) {
+          _handleBinanceData(rawData);
+        },
+        onError: (error) {
+          debugPrint('[BINANCE_WS] Error: $error');
+          _binanceStatus = 'Lỗi kết nối - Chuyển sang mô phỏng';
+          switchToSimulation();
+        },
+        onDone: () {
+          debugPrint('[BINANCE_WS] Disconnected');
+          if (_currentMode == DataSourceMode.binanceLive) {
+            _binanceStatus = 'Đã ngắt kết nối';
+          }
+        },
+      );
+    } catch (e) {
+      debugPrint('[BINANCE_WS] Connection exception: $e');
+      switchToSimulation();
+    }
+  }
+
+  /// Parses and dispatches Binance mini-ticker ticks
+  void _handleBinanceData(dynamic rawData) {
+    if (_priceStreamController.isClosed) return;
+    try {
+      final decoded = jsonDecode(rawData.toString());
+      if (decoded is List) {
+        for (final item in decoded) {
+          final symbolRaw = item['s'] as String?;
+          if (symbolRaw == null || !symbolRaw.endsWith('USDT')) continue;
+
+          // Strip 'USDT' to get base symbol: 'BTCUSDT' -> 'BTC'
+          final baseSymbol = symbolRaw.substring(0, symbolRaw.length - 4);
+          final asset = _assetsMap[baseSymbol];
+
+          if (asset != null) {
+            final closePrice = double.tryParse(item['c']?.toString() ?? '');
+            final openPrice = double.tryParse(item['o']?.toString() ?? '');
+            final highPrice = double.tryParse(item['h']?.toString() ?? '');
+            final lowPrice = double.tryParse(item['l']?.toString() ?? '');
+            final quoteVolume = double.tryParse(item['q']?.toString() ?? '');
+
+            if (closePrice != null && closePrice > 0) {
+              final percentChange = (openPrice != null && openPrice > 0)
+                  ? ((closePrice - openPrice) / openPrice) * 100
+                  : asset.change24h;
+              final priceDelta = closePrice - asset.currentPrice;
+
+              asset.applyBinanceTick(
+                newPrice: closePrice,
+                newChange24h: percentChange,
+                newHigh24h: highPrice ?? asset.high24h,
+                newLow24h: lowPrice ?? asset.low24h,
+                newVolume24h: quoteVolume ?? asset.volume24h,
+              );
+
+              final tick = MarketTick(
+                symbol: baseSymbol,
+                price: closePrice,
+                change: priceDelta,
+                percentChange: percentChange,
+                timestamp: DateTime.now(),
+                volume: quoteVolume ?? asset.volume24h,
+              );
+
+              _priceStreamController.add(tick);
+            }
+          }
+        }
+      }
+    } catch (e) {
+      debugPrint('[BINANCE_DATA_PARSE] Exception: $e');
+    }
+  }
+
+  /// Switch back to local simulation
+  void switchToSimulation() {
+    _disconnectBinance();
+    _currentMode = DataSourceMode.simulation;
+    _binanceStatus = 'Mô phỏng nội bộ';
+    _modeController.add(_currentMode);
+    startSimulation();
+  }
+
+  void _disconnectBinance() {
+    _binanceSubscription?.cancel();
+    _binanceSubscription = null;
+    _binanceChannel?.sink.close();
+    _binanceChannel = null;
+  }
+
+  /// Toggle between Simulation and Live Binance WebSocket
+  Future<void> toggleDataSource() async {
+    if (_currentMode == DataSourceMode.simulation) {
+      await connectToBinance();
+    } else {
+      switchToSimulation();
+    }
+  }
+
   /// Safe dispose method to close all controllers and release timers.
   Future<void> dispose() async {
     pauseSimulation();
+    _disconnectBinance();
     if (!_priceStreamController.isClosed) {
       await _priceStreamController.close();
     }
     if (!_listenerTrackerController.isClosed) {
       await _listenerTrackerController.close();
+    }
+    if (!_modeController.isClosed) {
+      await _modeController.close();
     }
   }
 }

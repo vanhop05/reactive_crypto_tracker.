@@ -43,6 +43,26 @@ class CryptoAsset {
     currentPrice = newPrice;
     lastUpdated = DateTime.now();
   }
+
+  /// Cập nhật dữ liệu trực tiếp từ sàn Binance
+  void applyBinanceTick({
+    required double newPrice,
+    required double newChange24h,
+    required double newHigh24h,
+    required double newLow24h,
+    required double newVolume24h,
+  }) {
+    currentPrice = newPrice;
+    change24h = newChange24h;
+    high24h = newHigh24h;
+    low24h = newLow24h;
+    volume24h = newVolume24h;
+    sparkline.add(newPrice);
+    if (sparkline.length > 25) {
+      sparkline.removeAt(0);
+    }
+    lastUpdated = DateTime.now();
+  }
   // Tao bản sao 
   CryptoAsset copyWith({
     String? id,
