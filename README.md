@@ -173,7 +173,7 @@ flutter run -d windows
 ---
 
 <a id="phan-chia-cong-viec"></a>
-##  BẢNG PHÂN CHIA CÔNG VIỆC (WORK BREAKDOWN STRUCTURE - WBS) & KỊCH BẢN COMMIT GIT
+##  BẢNG PHÂN CHIA CÔNG VIỆC  &  COMMIT GIT
 
 ### 1. Bảng Phân Công Công Việc Chi Tiết (WBS)
 
@@ -184,7 +184,7 @@ flutter run -d windows
 
 ---
 
-#### Kịch bản dòng lệnh Git tiêu biểu của nhóm:
+#### commit Git  của nhóm:
 
 ```bash
 # 1. Khởi tạo Git repository & nhánh chính [Trần Văn Hợp]
