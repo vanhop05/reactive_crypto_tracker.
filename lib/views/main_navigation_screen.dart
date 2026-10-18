@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'crypto_market_screen.dart';
 import 'event_loop_lab_screen.dart';
-import 'stream_operators_lab_screen.dart';
-import 'architecture_guide_screen.dart';
 
-/// Màn hình điều hướng chính hỗ trợ giao diện đáp ứng đa nền tảng (Responsive Layout):
-/// - BottomNavigationBar cho Di động (iOS & Android)
-/// - NavigationRail cho Máy tính (Desktop / Tablet / Trình duyệt Web rộng)
+/// Màn hình điều hướng chính với 2 phân hệ cốt lõi:
+/// 1. Thị Trường (Crypto Market: luồng Stream thời gian thực, Binance WebSocket, Debounce, Throttle)
+/// 2. Event Loop (Phòng thí nghiệm mô phỏng cơ chế ưu tiên hàng đợi của Dart)
 class MainNavigationScreen extends StatefulWidget {
   const MainNavigationScreen({super.key});
 
@@ -20,8 +18,6 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   final List<Widget> _screens = const [
     CryptoMarketScreen(),
     EventLoopLabScreen(),
-    StreamOperatorsLabScreen(),
-    ArchitectureGuideScreen(),
   ];
 
   @override
@@ -29,7 +25,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     final isWideScreen = MediaQuery.of(context).size.width >= 768;
 
     if (isWideScreen) {
-      // Bố cục màn hình rộng cho Desktop / Tablet / Web với NavigationRail cạnh trái
+      // Bố cục màn hình rộng cho Desktop / Tablet / Web với NavigationRail gọn gàng
       return Scaffold(
         body: Row(
           children: [
@@ -63,16 +59,6 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                   selectedIcon: Icon(Icons.sync, color: Color(0xFF10B981)),
                   label: Text('Event Loop'),
                 ),
-                NavigationRailDestination(
-                  icon: Icon(Icons.filter_alt),
-                  selectedIcon: Icon(Icons.filter_alt, color: Color(0xFF10B981)),
-                  label: Text('Toán Tử'),
-                ),
-                NavigationRailDestination(
-                  icon: Icon(Icons.menu_book),
-                  selectedIcon: Icon(Icons.menu_book, color: Color(0xFF10B981)),
-                  label: Text('Kiến Trúc'),
-                ),
               ],
             ),
             const VerticalDivider(thickness: 1, width: 1, color: Colors.white10),
@@ -82,7 +68,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
       );
     }
 
-    // Mobile Phone Layout (iOS & Android) with BottomNavigationBar
+    // Bố cục điện thoại di động (BottomNavigationBar)
     return Scaffold(
       body: IndexedStack(
         index: _currentIndex,
@@ -105,16 +91,6 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             icon: Icon(Icons.sync),
             activeIcon: Icon(Icons.sync, color: Color(0xFF10B981)),
             label: 'Event Loop',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.filter_alt),
-            activeIcon: Icon(Icons.filter_alt, color: Color(0xFF10B981)),
-            label: 'Toán Tử',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.menu_book),
-            activeIcon: Icon(Icons.menu_book, color: Color(0xFF10B981)),
-            label: 'Kiến Trúc',
           ),
         ],
       ),
