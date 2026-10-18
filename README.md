@@ -175,7 +175,7 @@ flutter run -d windows
 <a id="phan-chia-cong-viec"></a>
 ##  BẢNG PHÂN CHIA CÔNG VIỆC  &  COMMIT GIT
 
-### 1. Bảng Phân Công Công Việc Chi Tiết (WBS)
+### 1. Bảng Phân Công Công Việc 
 
 | Thành Viên | Vai Trò Chính | Các File Trực Tiếp Phụ Trách & Lập Trình | Chi Tiết Nhiệm Vụ & Đóng Góp |
 | :--- | :--- | :--- | :--- |
